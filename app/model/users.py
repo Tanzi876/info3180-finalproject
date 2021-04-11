@@ -11,7 +11,7 @@ class Users(db.Model):
     location=db.Column(db.String(80))
     biography=db.Column(db.String(80))
     photo=db.Column(db.String(80))
-    date_joined=db.Columnn(db.Date)
+    date_joined=db.Column(db.Date)
     
     def __init__(self,username,password,name,email,location,biography,photo,date_joined):
         self.username=username
