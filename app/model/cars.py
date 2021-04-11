@@ -6,10 +6,10 @@ class Cars(db.Model):
     __tablename__ = 'cars'
 
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(80),unique=True)
+    description = db.Column(db.String(80))
     make= db.Column(db.String(80))
     model=db.Column(db.String(80))
-    color=db.Column(db.String(80))
+    colour=db.Column(db.String(80))
     year=db.Column(db.String(80))
     transmission=db.Column(db.String(80))
     car_type=db.Column(db.String(80))
@@ -17,7 +17,18 @@ class Cars(db.Model):
     photo=db.Column(db.String(80))
     user_id=db.Column(db.Integer)
     
-    def __init__(self,):
+    def __init__(self,description,make,model,colour,year,transmission,car_type,price,photo,user_id):
+        self.description=description
+        self.make=make
+        self.model=model
+        self.colour=colour
+        self.year=year
+        self.transmission=transmission
+        self.car_type=car_type
+        self.price=price
+        self.photo=photo
+        self.user_id=user_id
+
         
         
     def is_authenticated(self):
