@@ -1,6 +1,6 @@
-# INFO3180 Lab 7
+# INFO3180 Final Project
 
-Starter code for Lab 7
+
 
 Remember to always create a virtual environment and install the packages in your requirements file
 
