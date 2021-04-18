@@ -138,6 +138,99 @@ const Register={
     }
 }
 
+const Login = Vue.component('login', {
+    template:`
+      <div>
+        <form id="login-form" @submit.prevent="login">
+            <div class="card-header center">
+              <strong>Login to your account</strong>
+            </div>
+            <div class="card center">
+              <div class="card-body login">
+                <div style="margin-top:5%;">
+                  <label for='username'><strong>Username</strong></label><br>
+                  <input type='text' id='username' name='username' style="width: 100%;"/>
+                </div>
+                <div style="margin-top:5%;">
+                  <label for='password'><strong>Password</strong></label><br>
+                  <input type='password' id='password' name='password' style="width: 100%;"/>
+                </div>
+                <div style="margin-top:5%;">
+                  <button id="submit" class="btn btn-success">Login</button> 
+                </div>
+                <div v-if='messageFlag' style="margin-top:5%;">
+                  <div class="alert alert-danger center" style="width: 100%; margin-top: 5%;">
+                    {{ message }}
+                  </div>
+                </div>
+              </div>
+            </div>
+        </form>
+      </div>
+    `,
+    methods:{
+      login: function(){
+        const self = this
+        
+        let login_data = document.getElementById('login-form');
+        let login_form = new FormData(login_data);
+        
+        fetch("/api/auth/login",{
+          method: "POST",
+          body: login_form,
+          headers: {
+          'X-CSRFToken': token
+          },
+          credentials: 'same-origin'
+        }).then(function(response){
+          return response.json();
+        }).then(function(jsonResponse){
+          self.messageFlag = true;
+          
+          if(jsonResponse.hasOwnProperty("token")){
+            cuser={"token":jsonResponse.token, id: jsonResponse.user_id};
+            localStorage.current_user = JSON.stringify(cuser);
+            
+            router.go();
+            router.push("/explore")
+          }else{
+            self.message = jsonResponse.errors
+          }
+
+        }).catch(function(error){
+          self.messageFlag = false;
+          console.log(error);
+        });
+      }
+    },
+    data: function(){
+      return {
+        messageFlag: false,
+        message: ""
+      }
+    }
+});
+
+const Logout = Vue.component("logout", {
+    template: `
+    <div>
+    <div/>`,
+    created: function(){
+        const self = this;
+        fetch("api/auth/logout", {
+        method: "GET"
+    }).then(function(response){
+      return response.json();
+    }).then(function(jsonResponse){
+      localStorage.removeItem("current_user");
+      router.go();
+      router.push("/");
+    }).catch(function(error){
+      console.log(error);
+    });
+  }
+});
+
 const Home = {
     name: 'Home',
     template: `
@@ -165,6 +258,8 @@ const routes = [
     { path: "/", component: Home,props:true},
     // Put other routes here
     {path: "/register", name: "register", component: Register},
+    { path: "/login", name:"login", component: Login},
+    { path: "/logout", name:"logout", component: Logout},
 
 
     // This is a catch all route in case none of the above matches
