@@ -14,10 +14,9 @@ const app = Vue.createApp({
 app.component('app-header', {
     name: 'AppHeader',
     template: `
-    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet"> 
-    <link rel="stylesheet" type="text/css" href="static/css/next.css">
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <a class="navbar-brand" href="#"><i class="fa fa-car"></i>United Auto Sales</a>
+      <a class="navbar-brand" href="#"><i class="fa fa-car" aria-hidden="true"></i>United Auto Sales</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -25,7 +24,16 @@ app.component('app-header', {
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <router-link class="nav-link" to="/">Home <span class="sr-only">(current)</span></router-link>
+            <router-link class="nav-link" to="/cars/new"> Add Car <span class="sr-only">(current)</span></router-link>
+          </li>
+          <li class="nav-item active">
+            <router-link class="nav-link" to="/explore"> Explore <span class="sr-only">(current)</span></router-link>
+          </li>
+          <li class="nav-item active">
+            <router-link class="nav-link" to="/users/{user_id}> My Profile <span class="sr-only">(current)</span></router-link>
+          </li>
+          <li class="nav-item active">
+            <router-link class="nav-link" to="/logout"> Logout <span class="sr-only">(current)</span></router-link>
           </li>
         </ul>
       </div>
@@ -137,6 +145,8 @@ const Register={
         }
     }
 }
+
+
 
 const Home = {
     name: 'Home',

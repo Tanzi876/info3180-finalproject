@@ -5,12 +5,14 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 from logging import error
-import os
-from app import app,db
-from flask import render_template, request, redirect, url_for, flash, jsonify,session,abort
+import os,time, base64, jwt
+from app import app,db,csrf, login_manager
+from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import RegisterForm
-from app.models import Users
+from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash
 from flask.helpers import send_from_directory
 
 ###
@@ -32,9 +34,10 @@ def register():
 
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        datejoin=time.strftime("%m/%d/%Y")
         #Store to data
         try:
-            user=Users(username, password, fullname, email, location, bio, filename)
+            user=Users(username, password, fullname, email, location, bio, filename,datejoin)
             db.session.add(user)
             db.session.commit()
 
@@ -42,11 +45,12 @@ def register():
             return jsonify(message=response),201
         except Exception as e:
             print(e)
-            response="Regristration Failed"
+            response="Registration Failed"
             return jsonify(error=response),400
 
-
-
+@app.route("/api/search",methods=["GET"])
+def search():
+    
 
 # Please create all new routes and view functions above this route.
 # This route is now our catch all route for our VueJS single page
