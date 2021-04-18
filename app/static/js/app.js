@@ -139,10 +139,7 @@ const Register={
 const Home = {
     name: 'Home',
     template: `
-    <div class="jumbotron">
-        <h1>Lab 7</h1>
-        <p class="lead">In this lab we will demonstrate VueJS working with Forms and Form Validation from Flask-WTF.</p>
-    </div>
+    
     `,
     data() {
         return {}

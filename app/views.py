@@ -4,13 +4,48 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-
-from app import app
-from flask import render_template, request
+from logging import error
+import os
+from app import app,db
+from flask import render_template, request, redirect, url_for, flash, jsonify
+from app.registerform import RegisterForm
+from app.users import Users
+from werkzeug.utils import secure_filename
+from flask.helpers import send_from_directory
 
 ###
 # Routing for your application.
 ###
+
+#Accepts user information and saves it to the database
+@app.route("/api/register",methods=["POST"])
+def register():
+    form=RegisterForm
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        fullname = form.fullname.data
+        email = form.email.data
+        location = form.location.data
+        bio = form.biography.data
+        photo = form.photo.data
+
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #Store to data
+        try:
+            user=Users(username, password, fullname, email, location, bio, filename)
+            db.session.add(user)
+            db.session.commit()
+
+            response="User Added"
+            return jsonify(message=response),201
+        except Exception as e:
+            print(e)
+            response="Regristration Failed"
+            return jsonify(error=response),400
+
+
 
 
 # Please create all new routes and view functions above this route.
