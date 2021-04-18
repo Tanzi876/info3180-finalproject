@@ -16,3 +16,7 @@ class RegisterForm(FlaskForm):
     ])
     photo = FileField('Photo', validators=[FileAllowed(['jpg','png','jpeg'], 'Images only!')])
     submit = SubmitField('Register')
+    
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
