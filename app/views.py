@@ -7,7 +7,7 @@ This file creates your application.
 from logging import error
 import os
 from app import app,db
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash, jsonify,session,abort
 from app.forms import RegisterForm
 from app.models import Users
 from werkzeug.utils import secure_filename

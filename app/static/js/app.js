@@ -14,6 +14,8 @@ const app = Vue.createApp({
 app.component('app-header', {
     name: 'AppHeader',
     template: `
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="static/css/next.css">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
       <a class="navbar-brand" href="#"><i class="fa fa-car"></i>United Auto Sales</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
