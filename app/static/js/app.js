@@ -234,7 +234,14 @@ const Logout = Vue.component("logout", {
 const Home = {
     name: 'Home',
     template: `
-    
+        <div class="jumbotron">
+            <h1>Buy and Sell Cars Online</h1>
+            <p class="lead">United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want</p>
+            <div style="margin-top: 20%;">
+                <router-link class="btn btn-success col-md-5" to="/register">Register</router-link>
+                <router-link class="btn btn-primary col-md-5" to="/login">Login</router-link>
+            </div>
+        </div>
     `,
     data() {
         return {}
