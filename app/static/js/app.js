@@ -146,9 +146,60 @@ const Register={
     }
 }
 
-<<<<<<< HEAD
+const Explore={
+    name:'explore'
+    template:`
+    <div class ="row">
+      <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
+          <div class="form-group">
+              <label for="car_make">Make</label>
+              <input type="text" class="form-control" id="car_make" name="car_make">
+          </div>
+          <div class="form-group">
+              <label for="car_model">Model</label>
+              <input type="text" class="form-control" id="car_model" name="car_model">
+          </div>
+      </form>
+    </div>
+      `,
+      methods:{
+        search(){
+            let search_query=document.getElementById('search-form');
+            let formdata= new FormData(search_query);
+            let self=this;
 
-=======
+            fetch("/api/search",{
+              method: 'GET',
+              headers:{
+                'Authorization':'Bearer' +localStorage.getItem('token')
+
+              },
+              credentials:'same-origin'
+              
+            })
+            .then(function(response){
+              return response.json();
+            })
+            .then(function(data){
+              console.log(data.result)
+              self.result=data.result;
+              
+            })
+            .catch(function(error){
+              console.log(error)
+
+            })           
+
+        },
+        data(){
+          return{
+            
+          }
+        }
+        
+      }
+}
+
 const Login = Vue.component('login', {
     template:`
       <div>
@@ -241,7 +292,6 @@ const Logout = Vue.component("logout", {
     });
   }
 });
->>>>>>> c637dd6e1bfd04d1f4ce47568ce449ff06835e6a
 
 const Home = {
     name: 'Home',
@@ -277,6 +327,7 @@ const routes = [
     { path: "/", component: Home,props:true},
     // Put other routes here
     {path: "/register", name: "register", component: Register},
+    {path: "/explore", name: "explore", component: Explore},
     { path: "/login", name:"login", component: Login},
     { path: "/logout", name:"logout", component: Logout},
 
