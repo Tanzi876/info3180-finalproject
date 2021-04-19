@@ -147,7 +147,7 @@ const Register={
 }
 
 const Explore={
-    name:'explore'
+    name:'explore',
     template:`
     <div class ="row">
       <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
@@ -170,6 +170,7 @@ const Explore={
 
             fetch("/api/search",{
               method: 'GET',
+              body:formdata,
               headers:{
                 'Authorization':'Bearer' +localStorage.getItem('token')
 
@@ -193,7 +194,7 @@ const Explore={
         },
         data(){
           return{
-            
+
           }
         }
         
