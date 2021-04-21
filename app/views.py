@@ -5,12 +5,35 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 
+import os
 from app import app
 from flask import render_template, request
+from flask import jsonify
+from .cars import Cars
+from .favourites import Favourites
 
 ###
 # Routing for your application.
 ###
+
+
+@app.route('/api/cars/<int:car_id>', methods = ['GET'])
+def viewcar(car_id):
+    """ use car_id to access cars from the list of cars added """ 
+    """ car = [Car for Car in Cars if Car['id'] == car_id] """
+    car = Cars.query.filter_by(car_id=id).first()
+    if car is not None:
+        return jsonify(car)
+    else:
+        """ errors = form_errors(someform)
+        return jsonify(errors) """
+
+@app.route('/api/cars/<car_id>/favourite', methods = ['POST'])
+def favcars(car_id):
+    """ user car_id to add to favorites """
+    fav = Favourites.query.filter_by(car_id=id).first()
+    if fav is not None:
+        return jsonify(fav)
 
 
 # Please create all new routes and view functions above this route.

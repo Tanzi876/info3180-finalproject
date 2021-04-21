@@ -8,6 +8,34 @@ const app = Vue.createApp({
     }
 });
 
+app.component('view-car', {
+    name: 'ViewCar', 
+    template: `
+    <div class="card-body">
+        <div class="pic">
+            <img :src="car.urlToImage" />
+        </div>
+        <div class="info1">
+            <h2 v-for="car in cars" class="card-name" >{{car.year}} {{ car.make }}</h2>
+            <p v-for="car in cars" class="card-model">{{ car.model }}</p>
+            <p v-for="car in cars" class="card-des">{{ car.description }}</p>
+        </div>
+        <div class="info2">
+            <p v-for="car in cars" class="card-color">{{ car.colour }}</p>
+            <p v-for="car in cars" class="card-price">{{ car.price }}</p>
+            <p v-for="car in cars" class="card-type">{{ car.car_type }}</p>
+            <p v-for="car in cars" class="card-trans">{{ car.transmission }}</p>
+        </div>
+        <div class=bottom">
+            <button type="button">Email Owner</button>`,
+    /* data() {
+        return {}
+    },
+    methods: {
+
+    } */
+})
+
 app.component('app-header', {
     name: 'AppHeader',
     template: `
