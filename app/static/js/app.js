@@ -11,31 +11,57 @@ const app = Vue.createApp({
 app.component('view-car', {
     name: 'ViewCar', 
     template: `
-    <div class="card-body">
-        <div class="pic">
-            <img :src="car.urlToImage" />
-        </div>
-        <div class="info1">
+    <div class="card" id="viewCar>
+            <img :src="car.urlToImage" class="card-img-right" />
+        <div class="card-body">
             <h2 v-for="car in cars" class="card-name" >{{car.year}} {{ car.make }}</h2>
             <p v-for="car in cars" class="card-model">{{ car.model }}</p>
             <p v-for="car in cars" class="card-des">{{ car.description }}</p>
-        </div>
-        <div class="info2">
             <p v-for="car in cars" class="card-color">{{ car.colour }}</p>
             <p v-for="car in cars" class="card-price">{{ car.price }}</p>
             <p v-for="car in cars" class="card-type">{{ car.car_type }}</p>
             <p v-for="car in cars" class="card-trans">{{ car.transmission }}</p>
+            <button class="btn" type="button">Email Owner</button>
         </div>
-        <div class=bottom">
-            <button type="button">Email Owner</button>
-            `,
+    </div>`,
+    /*add heart after button*/
     /* data() {
         return {}
-    },
+    },*/
     methods: {
+        viewcar() {
+            let viewdata = document.getElementById(viewCar);
 
-    } */
+            fetch("/api/cars/<int:car_id>", {
+                method: 'GET',
+                /*body: viewdata,
+                headers: {
+                    'X-CSRFToken': token
+                },
+                credentials:'same-origin' */
+            })
+            /* .then(resp => resp.json()) */
+            .then(function(response){
+                
+                
+                
+                self.message=jsonRespone.message;
+                self.error=jsonRespone.error;
+
+                if(self.message){
+                    router.push({path:'/login',params:{response:self.message}})
+                }else{
+                    console.log(self.error)
+                }
+        })
+    }
+}
 })
+
+/* app.component('fav-car', {
+    name: 'FavCar',
+    template
+}) */
 
 app.component('app-header', {
     name: 'AppHeader',

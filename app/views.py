@@ -20,23 +20,38 @@ from flask.helpers import send_from_directory
 ###
 
 
+#Get car details
 @app.route('/api/cars/<int:car_id>', methods = ['GET'])
 def viewcar(car_id):
-    """ use car_id to access cars from the list of cars added """ 
-    """ car = [Car for Car in Cars if Car['id'] == car_id] """
     car = Cars.query.filter_by(car_id=id).first()
     if car is not None:
-        return jsonify(car)
+        return jsonify(car=car),200
     else:
-        """ errors = form_errors(someform)
-        return jsonify(errors) """
+        response = "Car not found."
+        return jsonify(error=response),404 
 
-@app.route('/api/cars/<car_id>/favourite', methods = ['POST'])
-def favcars(car_id):
-    """ user car_id to add to favorites """
-    fav = Favourites.query.filter_by(car_id=id).first()
-    if fav is not None:
-        return jsonify(fav)
+
+#Add car to favorites
+@app.route('/api/cars/<int:car_id>/favourite', methods = ['POST'])
+@login_required
+def favcar(car_id):
+    if current_user.is_authenticated():
+        usid = current_user.get_id()
+        cid = Favourites.query.filter(car_id=car_id).one()
+        if cid is None:
+            fav = Favourites(cid, usid)
+            db.session.add(fav)
+            db.session.commit()
+
+            response = "Car added to favorites"
+            return jsonify(message=response),200
+        else:
+            response = "Car already a favorite"
+            return jsonify(error=response)
+    
+    else:
+        response = "Must be logged in to perform this action"
+        return jsonify(error=response)
 
 
 # Please create all new routes and view functions above this route.
