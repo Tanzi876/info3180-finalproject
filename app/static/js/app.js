@@ -27,7 +27,8 @@ app.component('view-car', {
             <p v-for="car in cars" class="card-trans">{{ car.transmission }}</p>
         </div>
         <div class=bottom">
-            <button type="button">Email Owner</button>`,
+            <button type="button">Email Owner</button>
+            `,
     /* data() {
         return {}
     },

@@ -10,7 +10,17 @@ $ source venv/bin/activate (or .\venv\Scripts\activate on Windows)
 $ pip install -r requirements.txt 
 $ python run.py
 ```
-Group Members and Tasks Assigned
+Group Members 
+Ashley- Ann Ellison 620117792
+Tanya-Lee Lawrence 620107576
+Kayle Blake 620096888
+Donald Berry 620130142
+Shenelle McCarthy 620068748
+
+
+
+
+Tasks Assigned
 
 Ashley- Ann Ellison:Get Details of a specific car;Add car to Favourites for logged in user
 
