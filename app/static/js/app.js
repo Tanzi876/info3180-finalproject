@@ -1,39 +1,4 @@
 /* Add your Application JavaScript */
-
-const Home = {
-  name: 'Home',
-  template: `
-      <div class="jumbotron">
-          <h1>{{welcome}}</h1>
-          <p class="lead">{{motto}}</p>
-          <div style="margin-top: 20%;">
-              <router-link class="btn btn-success col-md-5" to="/register">Register</router-link>
-              <router-link class="btn btn-primary col-md-5" to="/login">Login</router-link>
-          </div>
-      </div>
-  `,
-  data() {
-      return {
-        welcome:'Buy and Sell Cars Online',
-        motto:'United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want'
-        
-      }
-
-  }
-};
-
-const NotFound = {
-  name: 'NotFound',
-  template: `
-  <div>
-      <h1>404 - Not Found</h1>
-  </div>
-  `,
-  data() {
-      return {}
-  }
-};
-
 // const Register={
 //   name:'register',
 //   template:`   <div class= 'container centered'>
@@ -270,93 +235,90 @@ const NotFound = {
 //     });
 //   }
 // });
-
-// Instantiate our main Vue Instance
-const app = Vue.createApp({
+const Home={
+  name:'Home',
+  template:
+      `
+      <div class="home">
+        <img src="/static/images/logo.png" alt="VueJS Logo">
+        <h1>{{ welcome }}</h1>
+      </div>
+            `,
     data() {
-        return {
-          welcome:'Buy and Sell Cars Online',
-          motto:'United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want'
-
+      return {
+        welcome: 'Hello World! Welcome to VueJS'
         }
-    },
-    components:{
-      'home':Home
+      },
+
+    };
+
+
+
+const app = Vue.createApp({
+  data() {
+    return {
+      welcome: 'Hello World! Welcome to VueJS'
     }
+  },
+  component:{
+    'home':Home,
+    'news-list':NewsList
+  }
 });
 
+const router=VueRouter.createRouter({
+  history: VueRouter.createWebHistory(),
+  routes:[
+    {path:'/',component:Home},
+    {path: '/news',component:NewsList}
+
+  ]
+})
 
 
 
 app.component('app-header', {
-    name: 'AppHeader',
-    template: `
-    
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <a class="navbar-brand" href="#"><i class="fa fa-car" aria-hidden="true"></i>United Auto Sales</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item ">
-            <router-link class="nav-link" to="/cars/new"> Add Car</router-link>
-          </li>
-          <li class="nav-item ">
-            <router-link class="nav-link" to="/explore"> Explore </router-link>
-          </li>
-          <li class="nav-item ">
-            <router-link class="nav-link" to="/users/{user_id}> My Profile </router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/logout"> Logout </router-link>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    `
+  name: 'AppHeader',
+  template: `
+      <header>
+          <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+            <a class="navbar-brand" href="#">VueJS App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                <router-link to="/" class="nav-link">Home</router-link>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/news">News</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+      </header>    
+  `,
+  data: function() {
+    return {};
+  }
 });
 
 app.component('app-footer', {
-    name: 'AppFooter',
-    template: `
-    <footer>
-        <div class="container">
-            <p>Copyright &copy; {{ year }} Flask Inc.</p>
-        </div>
-    </footer>
-    `,
-    data() {
-        return {
-            year: (new Date).getFullYear()
-        }
-    }
-});
-
-
-
-
-
-// Define Routes
-const routes = [
-    { path: '/', component: Home},
-    // Put other routes here
-    {path: "/register", name: "register", component: Register},
-    {path: "/explore", name: "explore", component: Explore},
-    { path: "/login", name:"login", component: Login},
-    { path: "/logout", name:"logout", component: Logout},
-
-
-    // This is a catch all route in case none of the above matches
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound }
-];
-
-const router = VueRouter.createRouter({
-    history: VueRouter.createWebHistory(),
-    routes, // short for `routes: routes`
-});
-
-app.use(router);
-
+  name: 'AppFooter',
+  template: `
+      <footer>
+          <div class="container">
+              <p>Copyright &copy {{ year }} Flask Inc.</p>
+          </div>
+      </footer>
+  `,
+  data: function() {
+      return {
+          year: (new Date).getFullYear()
+      }
+  }
+})
+app.use(router)
 app.mount('#app');

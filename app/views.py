@@ -20,6 +20,8 @@ from flask.helpers import send_from_directory
 # Routing for your application.
 ###
 
+
+
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])
 def register():
