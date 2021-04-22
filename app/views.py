@@ -6,9 +6,10 @@ This file creates your application.
 """
 from logging import error
 import os,time, base64, jwt
-from app import app,db,csrf, login_manager
+from app import app,db,csrf
+#  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
-from flask_login import login_user, logout_user, current_user, login_required
+# from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import RegisterForm,SearchForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
@@ -49,7 +50,7 @@ def register():
             return jsonify(error=response),400
 
 @app.route("/api/search",methods=["GET"])
-@login_required
+# @login_required
 def search():
     try:
         
