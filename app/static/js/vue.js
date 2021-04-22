@@ -1,3 +1,5 @@
+//lab 6 starter
+
 var Vue = (function (exports) {
   'use strict';
 
