@@ -8,20 +8,22 @@ const app = Vue.createApp({
     }
 });
 
-app.component('view-car', {
+const ViewCar = {
     name: 'ViewCar', 
     template: `
+    <link rel="stylesheet" type="text/css" href="/static/css/app.css">
     <div class="card" id="viewCar>
             <img :src="car.urlToImage" class="card-img-right" />
         <div class="card-body">
-            <h2 v-for="car in cars" class="card-name" >{{car.year}} {{ car.make }}</h2>
-            <p v-for="car in cars" class="card-model">{{ car.model }}</p>
-            <p v-for="car in cars" class="card-des">{{ car.description }}</p>
-            <p v-for="car in cars" class="card-color">{{ car.colour }}</p>
-            <p v-for="car in cars" class="card-price">{{ car.price }}</p>
-            <p v-for="car in cars" class="card-type">{{ car.car_type }}</p>
-            <p v-for="car in cars" class="card-trans">{{ car.transmission }}</p>
-            <button class="btn" type="button">Email Owner</button>
+            <h2 class="card-name" >{{car.year}} {{ car.make }}</h2>
+            <p class="card-model">{{ car.model }}</p>
+            <p class="card-des">{{ car.description }}</p>
+            <p class="card-color">{{ car.colour }}</p>
+            <p class="card-price">{{ car.price }}</p>
+            <p class="card-type">{{ car.car_type }}</p>
+            <p class="card-trans">{{ car.transmission }}</p>
+            <button class="btn btn-success" type="button">Email Owner</button>
+            <button class="btn btn-light" v-on:click="favcar"></button>
         </div>
     </div>`,
     /*add heart after button*/
@@ -30,38 +32,50 @@ app.component('view-car', {
     },*/
     methods: {
         viewcar() {
-            let viewdata = document.getElementById(viewCar);
+            //let viewdata = document.getElementById(viewCar);
+            let self = this;
 
             fetch("/api/cars/<int:car_id>", {
                 method: 'GET',
-                /*body: viewdata,
+                /* body: 'viewdata', */
                 headers: {
-                    'X-CSRFToken': token
+                    'Authorization':'Bearer' +localStorage.getItem('token')
                 },
-                credentials:'same-origin' */
+                credentials:'same-origin' 
             })
-            /* .then(resp => resp.json()) */
             .then(function(response){
-                
-                
-                
-                self.message=jsonRespone.message;
-                self.error=jsonRespone.error;
-
-                if(self.message){
-                    router.push({path:'/login',params:{response:self.message}})
-                }else{
-                    console.log(self.error)
-                }
-        })
+                return response.json();
+            })
+            .then(function(data) {
+                console.log(data.result)
+                self.result=data.result;
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+        },
+        favcar() {
+            fetch('/api/cars/<int:car_id>/favourite', {
+                method: 'POST',
+                /* body: 'viewdata', */
+                headers: {
+                    'Authorization':'Bearer' +localStorage.getItem('token')
+                },
+                credentials:'same-origin' 
+            })
+            .then(function(response){
+                return response.json();
+            })
+            .then(function(data) {
+                console.log(data.result)
+                self.result=data.result;
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+        }
     }
 }
-})
-
-/* app.component('fav-car', {
-    name: 'FavCar',
-    template
-}) */
 
 app.component('app-header', {
     name: 'AppHeader',
@@ -102,10 +116,14 @@ app.component('app-footer', {
 const Home = {
     name: 'Home',
     template: `
-    <div class="jumbotron">
-        <h1>Lab 7</h1>
-        <p class="lead">In this lab we will demonstrate VueJS working with Forms and Form Validation from Flask-WTF.</p>
-    </div>
+        <div class="jumbotron">
+            <h1>Buy and Sell Cars Online</h1>
+            <p class="lead">United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want</p>
+            <div style="margin-top: 20%;">
+                <router-link class="btn btn-success col-md-5" to="/register">Register</router-link>
+                <router-link class="btn btn-primary col-md-5" to="/login">Login</router-link>
+            </div>
+        </div>
     `,
     data() {
         return {}

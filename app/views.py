@@ -51,7 +51,7 @@ def favcar(car_id):
     
     else:
         response = "Must be logged in to perform this action"
-        return jsonify(error=response)
+        return jsonify(error=response),401
 
 
 # Please create all new routes and view functions above this route.

@@ -1,3 +1,7 @@
-body {
+/* body {
     padding-top: 5rem;
+} */
+
+.btn btn-light {
+    background: transparent;
 }
