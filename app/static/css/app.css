@@ -2,6 +2,13 @@
     padding-top: 5rem;
 } */
 
-.btn btn-light {
+.fa-heart-o {
     background: transparent;
+    color: red;
+    cursor: pointer;
 }
+
+.fa-heart {
+    color: red;
+    cursor: pointer;
+  }

@@ -1,27 +1,5 @@
 /* Add your Application JavaScript */
 
-/* const Home = {
-  name: 'Home',
-  template: `
-      <div class="jumbotron">
-          <h1>{{welcome}}</h1>
-          <p class="lead">{{motto}}</p>
-          <div style="margin-top: 20%;">
-              <router-link class="btn btn-success col-md-5" to="/register">Register</router-link>
-              <router-link class="btn btn-primary col-md-5" to="/login">Login</router-link>
-          </div>
-      </div>
-  `,
-  data() {
-      return {
-        welcome:'Buy and Sell Cars Online',
-        motto:'United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want'
-        
-      }
-
-  }
-};
-
 const NotFound = {
   name: 'NotFound',
   template: `
@@ -32,7 +10,7 @@ const NotFound = {
   data() {
       return {}
   }
-}; */
+}; 
 
 // Instantiate our main Vue Instance
 const app = Vue.createApp({
@@ -51,7 +29,6 @@ const app = Vue.createApp({
 const ViewCar = {
     name: 'ViewCar', 
     template: `
-    <link rel="stylesheet" type="text/css" href="/static/css/app.css">
     <div class="card" id="viewCar>
             <img :src="car.urlToImage" class="card-img-right" />
         <div class="card-body">
@@ -63,7 +40,7 @@ const ViewCar = {
             <p class="card-type">{{ car.car_type }}</p>
             <p class="card-trans">{{ car.transmission }}</p>
             <button class="btn btn-success" type="button">Email Owner</button>
-            <button class="btn btn-light" v-on:click="favcar"></button>
+            <i id="heart" class="fa fa-heart-o" v-on:click="favcar"></i>
         </div>
     </div>`,
     /*add heart after button*/
@@ -95,6 +72,8 @@ const ViewCar = {
             })
         },
         favcar() {
+            let self = this;
+
             fetch('/api/cars/<int:car_id>/favourite', {
                 method: 'POST',
                 /* body: 'viewdata', */
