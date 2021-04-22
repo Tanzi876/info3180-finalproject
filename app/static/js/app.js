@@ -1,30 +1,21 @@
 /* Add your Application JavaScript */
 
-const NotFound = {
-  name: 'NotFound',
-  template: `
-  <div>
-      <h1>404 - Not Found</h1>
-  </div>
-  `,
-  data() {
-      return {}
-  }
-}; 
 
-// Instantiate our main Vue Instance
-const app = Vue.createApp({
+const Home={
+  name:'Home',
+  template:
+      `
+      <div class="home">
+        // <img src="/static/images/logo.png" alt="VueJS Logo">
+        <h1>{{ welcome }}</h1>
+      </div>
+            `,
     data() {
-        return {
-          welcome:'Buy and Sell Cars Online',
-          motto:'United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want'
-
+      return {
+        welcome: 'Hello World! Welcome to VueJS'
         }
-    },
-    components:{
-      'home':Home
+      }
     }
-});
 
 const ViewCar = {
     name: 'ViewCar', 
@@ -129,41 +120,62 @@ app.component('app-footer', {
         return {
             year: (new Date).getFullYear()
         }
-    }
+    },
+  component:{
+    'home':Home,    
+  }
 });
 
-const Home = {
-    name: 'Home',
-    template: `
-        <div class="jumbotron">
-            <h1>Buy and Sell Cars Online</h1>
-            <p class="lead">United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want</p>
-            <div style="margin-top: 20%;">
-                <router-link class="btn btn-success col-md-5" to="/register">Register</router-link>
-                <router-link class="btn btn-primary col-md-5" to="/login">Login</router-link>
+const router=VueRouter.createRouter({
+  history: VueRouter.createWebHistory(),
+  routes:[
+    {path:'/',component:Home}    
+
+  ]
+})
+
+
+
+app.component('app-header', {
+  name: 'AppHeader',
+  template: `
+      <header>
+          <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+            <a class="navbar-brand" href="#">VueJS App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                <router-link to="/" class="nav-link">Home</router-link>
+                </li>
+               
+              </ul>
             </div>
-        </div>
-    `,
-    data() {
-        return {}
-    }
-};
-
-
-// Define Routes
-const routes = [
-    { path: "/", component: Home },
-    // Put other routes here
-
-    // This is a catch all route in case none of the above matches
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound }
-];
-
-const router = VueRouter.createRouter({
-    history: VueRouter.createWebHistory(),
-    routes, // short for `routes: routes`
+          </nav>
+      </header>    
+  `,
+  data: function() {
+    return {};
+  }
 });
 
-app.use(router);
-
+app.component('app-footer', {
+  name: 'AppFooter',
+  template: `
+      <footer>
+          <div class="container">
+              <p>Copyright &copy {{ year }} Flask Inc.</p>
+          </div>
+      </footer>
+  `,
+  data: function() {
+      return {
+          year: (new Date).getFullYear()
+      }
+  }
+})
+app.use(router)
 app.mount('#app');

@@ -21,6 +21,8 @@ from flask.helpers import send_from_directory
 # Routing for your application.
 ###
 
+
+
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])
 def register():
@@ -119,7 +121,7 @@ def index(path):
 
     Also we will render the initial webpage and then let VueJS take control.
     """
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 # Here we define a function to collect form errors from Flask-WTF
