@@ -57,9 +57,10 @@ app.component('app-footer', {
     }
 });
 
-const Register={
+app.component('register',
     name:'register',
-    template:`   <div class= 'container centered'>
+    template:`  
+<div class= 'container centered'>
     <h1 class='page-header'>Register New User</h1>
     <ul class="">
         <li v-for="err in error" class="list alert alert-danger" role="alert">
@@ -69,7 +70,8 @@ const Register={
     
     <div>
         <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
-            <div class="form-group">
+            <div class="input-group">
+                <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username">
             </div>
@@ -77,7 +79,9 @@ const Register={
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
             </div>
-            <div class="form-group">
+             </div>
+           <div class = "input-group">
+                     <div class="form-group">
                 <label for="fullname">Fullname</label>
                 <input type="text" class="form-control" id="fullname" name="fullname">
             </div>
@@ -85,6 +89,7 @@ const Register={
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" name="email">
+            </div>
             </div>
             <div class="form-group">
                 <label for="location">Location</label>
@@ -144,7 +149,7 @@ const Register={
             message:''
         }
     }
-}
+ })
 
 const Explore={
     name:'explore',
