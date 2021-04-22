@@ -91,7 +91,7 @@ def index(path):
 
     Also we will render the initial webpage and then let VueJS take control.
     """
-    return render_template('index.html')
+    return send_static_file('index.html')
 
 
 # Here we define a function to collect form errors from Flask-WTF
