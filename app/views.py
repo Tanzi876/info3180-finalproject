@@ -15,7 +15,7 @@ from app.forms import RegisterForm,SearchForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
-from flask.helpers import send_from_directory
+from flask.helpers import get_flashed_messages, send_from_directory
 
 #Decorator functions for JWT Authentication
 def requires_auth(f):
@@ -101,7 +101,7 @@ def search():
             model=form.search_model.data
             result=Cars.query.filter_by(model=model).all()
             
-        return jsonify(result=result),200
+        return jsonify(message=result),200
     except Exception as e:
         print(e)
 
