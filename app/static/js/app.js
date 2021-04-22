@@ -1,92 +1,97 @@
 /* Add your Application JavaScript */
-// const Register={
-//   name:'register',
-//   template:`   <div class= 'container centered'>
-//   <h1 class='page-header'>Register New User</h1>
-//   <ul class="">
-//       <li v-for="err in error" class="list alert alert-danger" role="alert">
-//           {{ err }}
-//       </li>
-//   </ul>
+const Register={
+  name:'register',
+  template:`   <div class= 'container centered'>
+  <h1 class='page-header'>Register New User</h1>
+  <ul class="">
+      <li v-for="err in error" class="list alert alert-danger" role="alert">
+          {{ err }}
+      </li>
+  </ul>
   
-//   <div>
-//       <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
-//           <div class="form-group">
-//               <label for="username">Username</label>
-//               <input type="text" class="form-control" id="username" name="username">
-//           </div>
-//           <div class="form-group">
-//               <label for="password">Password</label>
-//               <input type="password" class="form-control" id="password" name="password">
-//           </div>
-//           <div class="form-group">
-//               <label for="fullname">Fullname</label>
-//               <input type="text" class="form-control" id="fullname" name="fullname">
-//           </div>
+  <div>
+      <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
+        <div class= "input-group>
+          <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" name="username">
+         </div>
+          <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password">
+          </div>
+        </div>
+        <div class= "input-group>
+          <div class="form-group">
+                <label for="fullname">Fullname</label>
+                <input type="text" class="form-control" id="fullname" name="fullname">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+        </div>          
           
-//           <div class="form-group">
-//               <label for="email">Email</label>
-//               <input type="email" class="form-control" id="email" name="email">
-//           </div>
-//           <div class="form-group">
-//               <label for="location">Location</label>
-//               <input type="text" class="form-control" id="location" name="location">
-//           </div>
-//           <div class="form-group">
-//               <label for="biography">Biography</label>
-//               <textarea id="biography" class="form-control" name="biography"></textarea>
-//           </div>
+          <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" class="form-control" id="location" name="location">
+          </div>
+          <div class="form-group">
+              <label for="biography">Biography</label>
+              <textarea id="biography" class="form-control" name="biography"></textarea>
+          </div>
           
-//           <div class="form-group">
-//               <label for="photo">Photo</label>
-//               <input type="file" id="photo" class="form-control" name="profile_photo">
-//           </div>
+          <div class="form-group">
+              <label for="photo">Photo</label>
+              <input type="file" id="photo" class="form-control" name="profile_photo">
+          </div>
       
-//           <button type="submit" class="btn btn-success">Register</button>
-//       </form>
-//   </div>
-// </div>`,
-//   method:{
-//       register:function(){
-//           let userinfo=document.getElementById('register-form');
-//           let formdata= new FormData(userinfo);
-//           let self=this;
+          <button type="submit" class="btn btn-success">Register</button>
+      </form>
+  </div>
+</div>`,
+  method:{
+      register(){
+          let userinfo=document.getElementById('register-form');
+          let formdata= new FormData(userinfo);
+          let self=this;
 
-//           fetch('/api/register',{
-//               method:'POST',
-//               body:formdata,
-//               headers:{
-//                   'X-CSRFToken':token
-//               },
-//               credentials: 'same-origin'
+          fetch('/api/register',{
+              method:'POST',
+              body:formdata,
+              headers:{
+                  'X-CSRFToken':token
+              },
+              credentials: 'same-origin'
 
 
-//           })
-//           .then(resp => resp.json())
-//           .then(function(jsonRespone){
-//               self.message=jsonRespone.message;
-//               self.error=jsonRespone.error;
+          })
+          .then(resp => resp.json())
+          .then(function(jsonRespone){
+              self.message=jsonRespone.message;
+              self.error=jsonRespone.error;
 
-//               if(self.message){
-//                   router.push({path:'/login',params:{response:self.message}})
-//               }else{
-//                   console.log(self.error)
-//               }
-//           })
-//           .catch(function(error){
-//               console.log(error)
-//           })
+              if(self.message){
+                  router.push({path:'/login',params:{response:self.message}})
+              }else{
+                  console.log(self.error)
+              }
+          })
+          .catch(function(error){
+              console.log(error)
+          })
 
-//       }
+      }
 
-//   },
-//   data:function(){
-//       return{
-//           error:[],
-//           message:''
-//       }
-//   }
-// }
+  },
+  data(){
+      return{
+          error:[],
+          message:''
+      }
+  },
+}
 
 // const Explore={
 //     name:'explore',
