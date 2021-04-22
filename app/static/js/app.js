@@ -300,17 +300,17 @@ app.component('app-header', {
     
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/cars/new"> Add Car <span class="sr-only">(current)</span></router-link>
+          <li class="nav-item ">
+            <router-link class="nav-link" to="/cars/new"> Add Car</router-link>
+          </li>
+          <li class="nav-item ">
+            <router-link class="nav-link" to="/explore"> Explore </router-link>
+          </li>
+          <li class="nav-item ">
+            <router-link class="nav-link" to="/users/{user_id}> My Profile </router-link>
           </li>
           <li class="nav-item active">
-            <router-link class="nav-link" to="/explore"> Explore <span class="sr-only">(current)</span></router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/users/{user_id}> My Profile <span class="sr-only">(current)</span></router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/logout"> Logout <span class="sr-only">(current)</span></router-link>
+            <router-link class="nav-link" to="/logout"> Logout </router-link>
           </li>
         </ul>
       </div>
