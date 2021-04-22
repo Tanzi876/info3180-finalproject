@@ -1,7 +1,8 @@
 /* Add your Application JavaScript */
 const Register={
   name:'register',
-  template:`   <div class= 'container centered'>
+  template:`  <div class name ="register">
+  <div class= 'container centered'>
   <h1 class='page-header'>Register New User</h1>
   <ul class="">
       <li v-for="err in error" class="list alert alert-danger" role="alert">
@@ -50,7 +51,8 @@ const Register={
           <button type="submit" class="btn btn-success">Register</button>
       </form>
   </div>
-</div>`,
+</div>
+  </div>`,
   method:{
       register(){
           let userinfo=document.getElementById('register-form');
@@ -245,13 +247,29 @@ const Home={
   template:
       `
       <div class="home">
-        // <img src="/static/images/logo.png" alt="VueJS Logo">
-        <h1>{{ welcome }}</h1>
+      <div class= "card-group mt-4"> 
+      <div v-if="response" class="alert alert-success alert-dismissible show fade">{{ response }}</div>
+      <div>
+          <div class="card mr-3">
+          <img class="card-img-top" src="#" alt="Car Logo">
+          </div> 
+          <div class="card">
+              <h3 class="card-title text-center mt-3 mb-0"><i class="fa fa car" size="7"></i> Auto Sale</h3>
+              <hr class="ml-5 mr-5">
+              <p class="card-body"> {{message}} </p>
+              <div class="row">
+                  <router-link to="register"  class=" btn btn-success col ml-3 mr-2">Register</router-link>
+                  <router-link to="login"  class="btn btn-primary col mr-3 ml-2">Login</router-link>
+              </div>  
+          </div>
+      </div>
+      
+  </div>
       </div>
             `,
     data() {
       return {
-        welcome: 'Hello World! Welcome to VueJS'
+        welcome: ''
         }
       },
 
@@ -262,11 +280,12 @@ const Home={
 const app = Vue.createApp({
   data() {
     return {
-      welcome: 'Hello World! Welcome to VueJS'
+      welcome: ''
     }
   },
   component:{
-    'home':Home,    
+    'home':Home, 
+    'register':Register   
   }
 });
 
