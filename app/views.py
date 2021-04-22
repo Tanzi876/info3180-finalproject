@@ -48,6 +48,37 @@ def register():
             response="Registration Failed"
             return jsonify(error=response),400
 
+@app.route("/api/cars",methods=["POST"])
+@login_required
+def cars():
+    form=AddCar()
+    if form.validate_on_submit():
+        make = form.make.data
+        model = form.model.data
+        colour = form.colour.data
+        year = form.year.data
+        transmission = form.transmission.data
+        car_type = form.car_type.data
+        description = form.description.data
+        price = form.price.data
+        user_id = form.user_id.data
+        photo = form.photo.data
+
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #Store to data
+        try:
+            cars=Cars(make, model, colour, year, transmission, car_type, description, price, user_id, filename)
+            db.session.add(user)
+            db.session.commit()
+
+            response="Car Added"
+            return jsonify(message=response),201
+        except Exception as e:
+            print(e)
+            response="Failed To Add New Car"
+            return jsonify(error=response),400
+
 @app.route("/api/search",methods=["GET"])
 @login_required
 def search():

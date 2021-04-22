@@ -57,8 +57,8 @@ app.component('app-footer', {
     }
 });
 
-app.component('register',
-    name:'register',
+app.component('register',{
+    name: 'register',
     template:`  
 <div class= 'container centered'>
     <h1 class='page-header'>Register New User</h1>
@@ -116,6 +116,107 @@ app.component('register',
             let self=this;
 
             fetch('/api/register',{
+                method:'POST',
+                body:formdata,
+                headers:{
+                    'X-CSRFToken':token
+                },
+                credentials: 'same-origin'
+
+
+            })
+            .then(resp => resp.json())
+            .then(function(jsonRespone){
+                self.message=jsonRespone.message;
+                self.error=jsonRespone.error;
+
+                if(self.message){
+                    router.push({path:'/login',params:{response:self.message}})
+                }else{
+                    console.log(self.error)
+                }
+            })
+            .catch(function(error){
+                console.log(error)
+            })
+
+        }
+
+    },
+    data:function(){
+        return{
+            error:[],
+            message:''
+        }
+    }
+ })
+
+ app.component('cars',{
+    name: 'cars',
+    template:`  
+<div class= 'container centered'>
+    <h1 class='page-header'>Add New Car</h1>
+    <ul class="">
+        <li v-for="err in error" class="list alert alert-danger" role="alert">
+            {{ err }}
+        </li>
+    </ul>
+    
+    <div>
+        <form id="AddCar" @submit.prevent='car' enctype='multipart/form-data' novalidate>
+            <div class="input-group">
+                <div class="form-group">
+                <label for="make">Make</label>
+                <input type="text" class="form-control" id="make" name="make">
+            </div>
+            <div class="form-group">
+                <label for="model">Model</label>
+                <input type="text" class="form-control" id="model" name="model">
+            </div>
+             </div>
+           <div class = "input-group">
+                     <div class="form-group">
+                <label for="colour">Colour</label>
+                <input type="text" class="form-control" id="Colour" name="Colour">
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Year</label>
+                <input type="text" class="form-control" id="year" name="year">
+            </div>
+            </div>
+            <div class="form-group">
+                <label for="transmission">Transmission</label>
+                <input type="text" class="form-control" id="transmission" name="transmission">
+            </div>
+            <div class="form-group">
+                <label for="car_type">Car Type</label>
+                <input type="text" class="form-control" id="car_type" name="car_type">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-control" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="decimal" class="form-control" id="price" name="price">
+            </div>
+            <div class="form-group">
+                <label for="photo">Photo</label>
+                <input type="file" id="photo" class="form-control" name="profile_photo">
+            </div>
+        
+            <button type="submit" class="btn btn-success">Add Car</button>
+        </form>
+    </div>
+</div>`,
+    method:{
+        car:function(){
+            let carinfo=document.getElementById('AddCar');
+            let formdata= new FormData(carinfo);
+            let self=this;
+
+            fetch('/api/cars',{
                 method:'POST',
                 body:formdata,
                 headers:{
