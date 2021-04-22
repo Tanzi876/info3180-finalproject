@@ -293,7 +293,10 @@ app.component('app-header', {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                <router-link to="/" class="nav-link">Home</router-link>
+                        <router-link to="/" class="nav-link">Home<span class="sr-only">(current)</span></router-link>
+                </li>
+                <li class="nav-item active">
+                        <router-link to="explore" class="nav-link"><strong>Explore</strong></router-link>
                 </li>
                
               </ul>
@@ -301,9 +304,28 @@ app.component('app-header', {
           </nav>
       </header>    
   `,
-  data: function() {
-    return {};
-  }
+  watch: {
+    '$route' (to, fom){
+        this.reload()
+    }
+  },
+created() {
+    let self = this;
+    self.user=localStorage.getItem('token');
+    self.userid=localStorage.getItem('userid')
+},
+  data() {
+    return {
+      //User array
+    };
+  },
+  methods:{
+    reload(){
+        let self = this;
+        self.user=localStorage.getItem('token');
+        self.userid=localStorage.getItem('userid')
+    }
+}
 });
 
 app.component('app-footer', {
