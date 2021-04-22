@@ -240,7 +240,7 @@ const Home={
   template:
       `
       <div class="home">
-        <img src="/static/images/logo.png" alt="VueJS Logo">
+        // <img src="/static/images/logo.png" alt="VueJS Logo">
         <h1>{{ welcome }}</h1>
       </div>
             `,
@@ -261,16 +261,14 @@ const app = Vue.createApp({
     }
   },
   component:{
-    'home':Home,
-    'news-list':NewsList
+    'home':Home,    
   }
 });
 
 const router=VueRouter.createRouter({
   history: VueRouter.createWebHistory(),
   routes:[
-    {path:'/',component:Home},
-    {path: '/news',component:NewsList}
+    {path:'/',component:Home}    
 
   ]
 })
@@ -292,9 +290,7 @@ app.component('app-header', {
                 <li class="nav-item active">
                 <router-link to="/" class="nav-link">Home</router-link>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/news">News</a>
-                </li>
+               
               </ul>
             </div>
           </nav>
