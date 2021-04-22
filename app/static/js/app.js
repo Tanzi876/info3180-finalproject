@@ -1,10 +1,50 @@
 /* Add your Application JavaScript */
+
+/* const Home = {
+  name: 'Home',
+  template: `
+      <div class="jumbotron">
+          <h1>{{welcome}}</h1>
+          <p class="lead">{{motto}}</p>
+          <div style="margin-top: 20%;">
+              <router-link class="btn btn-success col-md-5" to="/register">Register</router-link>
+              <router-link class="btn btn-primary col-md-5" to="/login">Login</router-link>
+          </div>
+      </div>
+  `,
+  data() {
+      return {
+        welcome:'Buy and Sell Cars Online',
+        motto:'United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want'
+        
+      }
+
+  }
+};
+
+const NotFound = {
+  name: 'NotFound',
+  template: `
+  <div>
+      <h1>404 - Not Found</h1>
+  </div>
+  `,
+  data() {
+      return {}
+  }
+}; */
+
 // Instantiate our main Vue Instance
 const app = Vue.createApp({
     data() {
         return {
+          welcome:'Buy and Sell Cars Online',
+          motto:'United Auto Sales provides the fastest, easiest and most user friendly way to buy and sell cars online. Find a Great Price on the Vehicle You Want'
 
         }
+    },
+    components:{
+      'home':Home
     }
 });
 
@@ -130,17 +170,6 @@ const Home = {
     }
 };
 
-const NotFound = {
-    name: 'NotFound',
-    template: `
-    <div>
-        <h1>404 - Not Found</h1>
-    </div>
-    `,
-    data() {
-        return {}
-    }
-};
 
 // Define Routes
 const routes = [

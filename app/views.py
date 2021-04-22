@@ -6,10 +6,12 @@ This file creates your application.
 """
 
 from logging import error
-import os,time, base64
-from app import app,db,csrf, login_manager
+import os,time, base64, jwt
+from app import app,db,csrf
+#  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
-from flask_login import login_user, logout_user, current_user, login_required
+# from flask_login import login_user, logout_user, current_user, login_required
+from app.forms import RegisterForm,SearchForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
@@ -19,6 +21,56 @@ from flask.helpers import send_from_directory
 # Routing for your application.
 ###
 
+#Accepts user information and saves it to the database
+@app.route("/api/register",methods=["POST"])
+def register():
+    form=RegisterForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        fullname = form.fullname.data
+        email = form.email.data
+        location = form.location.data
+        bio = form.biography.data
+        photo = form.photo.data
+
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        datejoin=time.strftime("%m/%d/%Y")
+        #Store to data
+        try:
+            user=Users(username, password, fullname, email, location, bio, filename,datejoin)
+            db.session.add(user)
+            db.session.commit()
+
+            response="User Added"
+            return jsonify(message=response),201
+        except Exception as e:
+            print(e)
+            response="Registration Failed"
+            return jsonify(error=response),400
+
+@app.route("/api/search",methods=["GET"])
+# @login_required
+def search():
+    try:
+        
+        form=SearchForm()
+    
+        if form.search_make.data:
+            make=form.search_make.data
+            result= Cars.query.filter_by(make=make).all()
+
+        if form.search_model.data:
+            model=form.search_model.data
+            result=Cars.query.filter_by(model=model).all()
+            
+        return jsonify(result=result),200
+    except Exception as e:
+        print(e)
+
+        response="No Record Found"
+        return jsonify(error=response),400
 
 #Get car details
 @app.route('/api/cars/<int:car_id>', methods = ['GET'])

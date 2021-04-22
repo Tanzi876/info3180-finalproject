@@ -3,6 +3,8 @@
   * (c) 2021 Eduardo San Martin Morote
   * @license MIT
   */
+//lab 6 starter
+
 var VueRouter = (function (exports, vue) {
   'use strict';
 
