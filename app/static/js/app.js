@@ -258,7 +258,7 @@ const Register ={
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input type="file" id="photo"" class="form-control" name="profile_photo">
+            <input type="file" id="photo" class="form-control" name="photo">
           </div>
           <button type="submit" class="btn btn-success">Register</button>
         </form>
