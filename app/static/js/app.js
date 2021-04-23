@@ -222,7 +222,7 @@ const Login = {
 
 const Register = {
 template:`
-   <div class ="register">
+  
  <div class= 'container centered'>
       <h1 class='page-header'>Register New User</h1>
       <ul class="">
@@ -264,7 +264,7 @@ template:`
         </form>
       </div>
     </div>
-</div>`,
+              `,
   method:{
     registerForm(){
     let userinfo=document.getElementById('register-form');
@@ -341,7 +341,7 @@ const app = Vue.createApp({
   },
   component:{
     'home':Home,
-//     'register':Register    
+    'register':Register    
   }
 });
 
