@@ -231,7 +231,7 @@ template:`
         </li>
       </ul>
       <div>
-        <form id="register-form" @submit.prevent= register() enctype='multipart/form-data' novalidate>
+        <form id="register-form" @submit.prevent= registerForm() enctype='multipart/form-data' novalidate>
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text"  class="form-control" id="username" name="username">
@@ -266,7 +266,7 @@ template:`
     </div>
 </div>`,
   method:{
-    register(){
+    registerForm(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
