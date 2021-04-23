@@ -260,7 +260,7 @@ const Register ={
             <label for="photo">Photo</label>
             <input type="file" id="photo" class="form-control" name="profile_photo">
           </div>
-          <button class="btn btn-success mb-2" click="registerme">Register</button>
+          <button class="btn btn-success mb-2" v-on:click="registerme">Register</button>
         </form>
       </div>
     </div>`,
