@@ -250,7 +250,7 @@ const Register ={
           </div>
           <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" " class="form-control" id="location" name="location">
+            <input type="text"  class="form-control" id="location" name="location">
           </div>
           <div class="form-group">
             <label for="biography">Biography</label>
