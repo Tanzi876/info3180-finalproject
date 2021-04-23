@@ -1,59 +1,55 @@
 /* Add your Application JavaScript */
 
-// const Explore={
-//     name:'explore',
-//     template:`
-//     <div class ="row">
-//       <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
-//           <div class="form-group">
-//               <label for="car_make">Make</label>
-//               <input type="text" class="form-control" id="car_make" name="car_make">
-//           </div>
-//           <div class="form-group">
-//               <label for="car_model">Model</label>
-//               <input type="text" class="form-control" id="car_model" name="car_model">
-//           </div>
-//       </form>
-//     </div>
-//       `,
-//       methods:{
-//         search(){
-//             let search_query=document.getElementById('search-form');
-//             let formdata= new FormData(search_query);
-//             let self=this;
+const Explore={
+    name:'explore',
+    template:`
+    <div class ="row">
+      <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
+          <div class="input-group">
+          </div
+      </form>
+    </div>
+      `,
+      methods:{
+        search(){
+            let search_query=document.getElementById('search-form');
+            let formdata= new FormData(search_query);
+            let self=this;
 
-//             fetch("/api/search",{
-//               method: 'GET',
-//               body:formdata,
-//               headers:{
-//                 'Authorization':'Bearer' +localStorage.getItem('token')
+            fetch("/api/search",{
+              method: 'GET',
+              body:formdata,
+              headers:{
+                'Authorization':'Bearer' +localStorage.getItem('token')
 
-//               },
-//               credentials:'same-origin'
+              },
+              credentials:'same-origin'
             
-//             })
-//             .then(function(response){
-//               return response.json();
-//             })
-//             .then(function(data){
-//               console.log(data.result)
-//               self.result=data.result;
+            })
+            .then(function(response){
+              return response.json();
+            })
+            .then(function(data){
+              console.log(data.result)
+              self.result=data.result;
             
-//             })
-//             .catch(function(error){
-//               console.log(error)
+            })
+            .catch(function(error){
+              console.log(error)
 
-//             })           
+            })           
 
-//         },
-//         data(){
-//           return{
+        },
+        data(){
+          return{
+            car_make='',
+            car_model=''
 
-//           }
-//         }
+          }
+        }
       
-//       }
-// }
+      }
+}
 
 // const Login = Vue.component('login', {
 //     template:`
@@ -232,7 +228,7 @@ template:`
         </li>
       </ul>
       <div>
-        <form id="register-form" @submit.prevent= 'register' enctype='multipart/form-data' novalidate>
+        <form id="register-form" @submit.prevent= 'registerForm' enctype='multipart/form-data' novalidate>
           <div class ="input-group">
 
           <div class="form-group">
@@ -351,7 +347,8 @@ const app = Vue.createApp({
   },
   component:{
     'home':Home,
-    'register':Register    
+    'register':Register, 
+    'explore':Explore 
   }
 });
 
@@ -360,7 +357,8 @@ const router=VueRouter.createRouter({
   routes:[
     {path:'/',component:Home},
     {path:'/register',component:Register},
-    {path:'/login',component:Login}
+    {path:'/login',component:Login},
+    {path:'/explore',component:Explore}
   ]
 })
 
