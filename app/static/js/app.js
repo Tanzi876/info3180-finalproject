@@ -234,31 +234,31 @@ const Register ={
         <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username">
+            <input type="text" v-model="message" class="form-control" id="username" name="username">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password">
+            <input type="password" v-model="message" class="form-control" id="password" name="password">
           </div>
           <div class="form-group">
             <label for="fullname">Fullname</label>
-            <input type="text" class="form-control" id="fullname" name="fullname">
+            <input type="text" v-model="message" class="form-control" id="fullname" name="fullname">
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email">
+            <input type="email" v-model="message" class="form-control" id="email" name="email">
           </div>
           <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" class="form-control" id="location" name="location">
+            <input type="text" v-model="message" class="form-control" id="location" name="location">
           </div>
           <div class="form-group">
             <label for="biography">Biography</label>
-            <textarea id="biography" class="form-control" name="biography"></textarea>
+            <textarea id="biography" v-model="message" class="form-control" name="biography"></textarea>
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input type="file" id="photo" class="form-control" name="profile_photo">
+            <input type="file" id="photo" v-model="message" class="form-control" name="profile_photo">
           </div>
           <button class="btn btn-success mb-2" v-on:click="registerme">Register</button>
         </form>
