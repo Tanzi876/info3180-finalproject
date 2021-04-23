@@ -234,38 +234,38 @@ const Register ={
         <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" v-model="message" class="form-control" id="username" name="username">
+            <input type="text"  class="form-control" id="username" name="username">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" v-model="message" class="form-control" id="password" name="password">
+            <input type="password"  class="form-control" id="password" name="password">
           </div>
           <div class="form-group">
             <label for="fullname">Fullname</label>
-            <input type="text" v-model="message" class="form-control" id="fullname" name="fullname">
+            <input type="text"  class="form-control" id="fullname" name="fullname">
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" v-model="message" class="form-control" id="email" name="email">
+            <input type="email"  class="form-control" id="email" name="email">
           </div>
           <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" v-model="message" class="form-control" id="location" name="location">
+            <input type="text" " class="form-control" id="location" name="location">
           </div>
           <div class="form-group">
             <label for="biography">Biography</label>
-            <textarea id="biography" v-model="message" class="form-control" name="biography"></textarea>
+            <textarea id="biography"  class="form-control" name="biography"></textarea>
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input type="file" id="photo" v-model="message" class="form-control" name="profile_photo">
+            <input type="file" id="photo"" class="form-control" name="profile_photo">
           </div>
-          <button class="btn btn-success mb-2" v-on:click="registerme">Register</button>
+          <button type="submit" class="btn btn-success">Register</button>
         </form>
       </div>
     </div>`,
   method:{
-    registerme:function(event){
+    register(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
@@ -280,9 +280,9 @@ const Register ={
     })
 
     .then(resp => resp.json())
-    .then(function(jsonRespone){
-      self.message=jsonRespone.message;
-      self.error=jsonRespone.error;
+    .then(function(jsonResp){
+      self.message=jsonResp.message;
+      self.error=jsonResp.error;
       if(self.message){
         router.push({path:'/login',params:{response:self.message}})
       }else{
@@ -301,7 +301,7 @@ const Register ={
       error:[],
       message:''
     }
-  }
+  },
 };
 
 
@@ -311,7 +311,7 @@ const Home ={
       <div class="home">
         <h1>{{ heading }}</h1>
         <p>{{ para }}</p>
-        <button @click= registerme() type = "button">Register</button>
+        <button @click= register() type = "button">Register</button>
         <button @click= login() type = "button">Login</button>
       </div>`,
     data() {
