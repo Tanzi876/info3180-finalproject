@@ -1,3 +1,28 @@
 body {
     padding-top: 5rem;
 }
+
+.home {
+    height: 600px;
+    display: grid;
+    grid: "1 2";
+    grid-column-gap: 20px;
+}
+
+.home-img{
+    grid-area: "2";
+}
+
+.home-img img{
+    height: 600px;
+    object-fit: cover;
+    max-width: 100%;
+}
+
+.home-txt{
+    grid-area: "1"; 
+    align-content: center;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.3rem;
+}

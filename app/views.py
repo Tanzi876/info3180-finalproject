@@ -55,7 +55,10 @@ def requires_auth(f):
 # Routing for your application.
 ###
 
-
+@app.route('/images/<filename>')
+def get_Image(filename):
+    rootdir = os.getcwd()
+    return send_from_directory(rootdir+"/"+app.config['IMAGES'],filename)
 
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])

@@ -309,10 +309,15 @@ const Home ={
   name:'Home',
   template:`
       <div class="home">
-        <h1>{{ heading }}</h1>
-        <p>{{ para }}</p>
-        <button @click= register() type = "button">Register</button>
-        <button @click= login() type = "button">Login</button>
+        <div class="home-txt">
+          <h1>{{ heading }}</h1>
+          <p>{{ para }}</p>
+          <button @click= register() type = "button">Register</button>
+          <button @click= login() type = "button">Login</button>
+        </div>
+        <div class="home-img">
+          <img src= "/images/homepage.jpeg"/>
+        </div>
       </div>`,
     data() {
       return {
@@ -357,8 +362,11 @@ app.component('app-header', {
   name: 'AppHeader',
   template: `
       <header>
-          <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-            <a class="navbar-brand" href="#">United Auto Sales</a>
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">
+            <img src="">
+            United Auto Sales
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -366,6 +374,8 @@ app.component('app-header', {
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                 <router-link to="/register" class="nav-link">Register</router-link>
+                </li>
+                <li class="nav-item active">
                 <router-link to="/login" class="nav-link">Login</router-link>
                 </li>
               </ul>
