@@ -10,7 +10,7 @@ from functools import wraps
 from app import app,db,csrf
 #  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
-# from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import RegisterForm,SearchForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
@@ -18,35 +18,35 @@ from werkzeug.security import check_password_hash
 from flask.helpers import get_flashed_messages, send_from_directory
 
 #Decorator functions for JWT Authentication
-# def requires_auth(f):
-#   @wraps(f)
-#   def decorated(*args, **kwargs):
-#     auth = request.headers.get('Authorization', None)
-#     if not auth:
-#       return jsonify({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'}), 401
+def requires_auth(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    auth = request.headers.get('Authorization', None)
+    if not auth:
+      return jsonify({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'}), 401
 
-#     parts = auth.split()
+    parts = auth.split()
 
-#     if parts[0].lower() != 'bearer':
-#       return jsonify({'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}), 401
-#     elif len(parts) == 1:
-#       return jsonify({'code': 'invalid_header', 'description': 'Token not found'}), 401
-#     elif len(parts) > 2:
-#       return jsonify({'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}), 401
+    if parts[0].lower() != 'bearer':
+      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}), 401
+    elif len(parts) == 1:
+      return jsonify({'code': 'invalid_header', 'description': 'Token not found'}), 401
+    elif len(parts) > 2:
+      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}), 401
 
-#     token = parts[1]
-#     try:
-#          payload = jwt.decode(token, app.config['SECRET_KEY'])
+    token = parts[1]
+    try:
+         payload = jwt.decode(token, app.config['SECRET_KEY'])
 
-#     except jwt.ExpiredSignature:
-#         return jsonify({'code': 'token_expired', 'description': 'token is expired'}), 401
-#     except jwt.DecodeError:
-#         return jsonify({'code': 'token_invalid_signature', 'description': 'Token signature is invalid'}), 401
+    except jwt.ExpiredSignature:
+        return jsonify({'code': 'token_expired', 'description': 'token is expired'}), 401
+    except jwt.DecodeError:
+        return jsonify({'code': 'token_invalid_signature', 'description': 'Token signature is invalid'}), 401
 
-#     current_user = user = payload
-#     return f(*args, **kwargs)
+    current_user = user = payload
+    return f(*args, **kwargs)
 
-#   return decorated
+  return decorated
 
 
 
@@ -87,7 +87,7 @@ def register():
             return jsonify(error=response),400
 
 @app.route("/api/search",methods=["GET"])
-# @login_required
+@requires_auth
 def search():
     try:
         
@@ -108,9 +108,43 @@ def search():
         response="No Record Found"
         return jsonify(error=response),400
 
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        
+        #Query the database for records matching the given username and password
+        user = db.session.query(Users).filter_by(username=username).first()
+        
+        if (check_password_hash(user.password, password)):
+            
+            login_user(user)
 
+            #creates bearer token 
+            jwt_token = jwt.encode({'id':user.id, 'user': user.username}, app.config['SECRET_KEY'], algorithm = 'HS256').decode('utf-8')
 
+            #Flash message for a successful login
+            response = "Your login was successful"
+            return jsonify(message=response, token=jwt_token), 200
+        else:
+            #Flash message for a failed login
+            response = "Incorrect username and password combination"
+            return jsonify(error=response), 400
+       
+    #Flash message to indicate a failed login
+    response = form_errors(form)
+    return jsonify(error=response)
 
+#Api route to Logout a user
+@app.route("/api/auth/logout", methods=["GET"])
+@requires_auth
+def logout():
+    logout_user()
+
+    #Flash message for successful logout
+    response = "You were logged out successfully."
+    return jsonify(message=response)
     
 
 # Please create all new routes and view functions above this route.

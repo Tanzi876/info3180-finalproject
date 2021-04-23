@@ -67,7 +67,7 @@ const Logout = {
     template: `
     <div>
     <div/>`,
-    created: function () {
+    created() {
       let self = this;
       
       fetch('/api/auth/logout', {
@@ -128,7 +128,7 @@ const Login = {
       </form>
     </div>`,
   methods:{
-    login: function(){
+    login(){
     const self = this
       
     let login_data = document.getElementById('login-form');
@@ -161,7 +161,7 @@ const Login = {
           });
     }
   },
-  data: function(){
+  data(){
     return {
       messageFlag: false,
       message: ""
