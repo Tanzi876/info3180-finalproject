@@ -260,12 +260,12 @@ const Register ={
             <label for="photo">Photo</label>
             <input type="file" id="photo" class="form-control" name="profile_photo">
           </div>
-          <button type="submit" class="btn btn-success">Register</button>
+          <button class="btn btn-success mb-2" click="registerme">Register</button>
         </form>
       </div>
     </div>`,
   method:{
-    register:function(){
+    registerme(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
@@ -296,7 +296,7 @@ const Register ={
 
     }
   },
-  data:function(){
+  data(){
     return{
       error:[],
       message:''
@@ -311,7 +311,7 @@ const Home ={
       <div class="home">
         <h1>{{ heading }}</h1>
         <p>{{ para }}</p>
-        <button @click= register() type = "button">Register</button>
+        <button @click= registerme() type = "button">Register</button>
         <button @click= login() type = "button">Login</button>
       </div>`,
     data() {
