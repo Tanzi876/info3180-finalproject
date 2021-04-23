@@ -223,7 +223,8 @@ const Login = {
 const Register ={
   name:'register',
   template:`
-    <div class= 'container centered'>
+   <div class ="register">
+ <div class= 'container centered'>
       <h1 class='page-header'>Register New User</h1>
       <ul class="">
         <li v-for="err in error" class="list alert alert-danger" role="alert">
@@ -263,7 +264,8 @@ const Register ={
           <button type="submit" class="btn btn-success">Register</button>
         </form>
       </div>
-    </div>`,
+    </div>
+</div>`,
   method:{
     register(){
     let userinfo=document.getElementById('register-form');
