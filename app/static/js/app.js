@@ -265,7 +265,7 @@ const Register ={
       </div>
     </div>`,
   method:{
-    register(){
+    register:function(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
