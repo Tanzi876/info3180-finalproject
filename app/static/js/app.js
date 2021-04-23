@@ -302,7 +302,7 @@ template:`
       error:[],
       message:''
     }
-  },
+  }
 };
 
 
