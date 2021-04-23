@@ -127,6 +127,7 @@ const Login = {
         </div>
       </form>
     </div>`,
+    props:['response'],
   methods:{
     login(){
     const self = this
@@ -141,32 +142,33 @@ const Login = {
         'X-CSRFToken': token
       },
       credentials: 'same-origin'
-    }).then(function(response){
-        return response.json();
-      }).then(function(jsonResponse){
-          self.messageFlag = true;
-        
-          if(jsonResponse.hasOwnProperty("token")){
-           let cuser={"token":jsonResponse.token, id: jsonResponse.user_id};
-            localStorage.current_user = JSON.stringify(cuser);
-          
-            router.go();
-            router.push("/explore")
-          }else{
-            self.message = jsonResponse.errors
-          }
-        }).catch(function(error){
-          self.messageFlag = false;
-          console.log(error);
-          });
-    }
-  },
-  data(){
-    return {
-      messageFlag: false,
-      message: ""
-    }
-  }
+
+    })
+    .then(resp => resp.json())
+            .then(function(jsonResp) {
+                
+                self.message = jsonResp.message;
+                self.error = jsonResp.error;
+                
+                if (self.message) {
+                    let jwt_token = jsonResp.token
+                    localStorage.setItem('token', jwt_token);
+                    router.push({path: '/explore'})
+                } else {
+                    console.log(self.error);
+                }
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+        }
+    },
+    data: function() {
+        return {
+            message: '',
+            error: []
+        }
+    },
 };
 
 const Register = {
