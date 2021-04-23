@@ -382,29 +382,29 @@ app.component('app-header', {
           </nav>
       </header>    
   `,
-  watch: {
-    '$route' (to, fom){
-        this.reload()
-    }
-  },
-created() {
-    let self = this;
-    self.user=localStorage.getItem('token');
-    self.userid=localStorage.getItem('userid')
-},
-  data() {
-    return {
-      //User array
-    };
-  },
-  methods:{
-    reload(){
-        let self = this;
-        self.user=localStorage.getItem('token');
-        self.userid=localStorage.getItem('userid')
-    }
-}
-});
+//   watch: {
+//     '$route' (to, fom){
+//         this.reload()
+//     }
+//   },
+// created() {
+//     let self = this;
+//     self.user=localStorage.getItem('token');
+//     self.userid=localStorage.getItem('userid')
+// },
+//   data() {
+//     return {
+//       //User array
+//     };
+//   },
+//   methods:{
+//     reload(){
+//         let self = this;
+//         self.user=localStorage.getItem('token');
+//         self.userid=localStorage.getItem('userid')
+//     }
+// }
+// });
 
 app.component('app-footer', {
   name: 'AppFooter',
