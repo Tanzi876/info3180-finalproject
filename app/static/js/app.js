@@ -220,7 +220,7 @@ const Login = {
   }
 };
 
-const Register = Vue.component('register',{
+const Register = {
 template:`
    <div class ="register">
  <div class= 'container centered'>
@@ -231,7 +231,7 @@ template:`
         </li>
       </ul>
       <div>
-        <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
+        <form id="register-form" @submit.prevent= register() enctype='multipart/form-data' novalidate>
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text"  class="form-control" id="username" name="username">
@@ -303,7 +303,7 @@ template:`
       message:''
     }
   },
-});
+};
 
 
 const Home ={
