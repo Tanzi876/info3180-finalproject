@@ -266,7 +266,7 @@ template:`
     </div>
               `,
   method:{
-    registerForm: function(submitEvent){
+    registerForm(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
