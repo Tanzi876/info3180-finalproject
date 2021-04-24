@@ -11,7 +11,7 @@ from app import app,db,csrf
 #  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import RegisterForm,SearchForm
+from app.forms import RegisterForm,SearchForm,LoginForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash

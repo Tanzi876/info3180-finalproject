@@ -261,12 +261,12 @@ template:`
     return{
       error:[],
       message:'',
-      // fullname:'',
-      // username:'',
-      // password:'',
-      // location:'',
-      // biography:'',
-      // photo:'',
+      fullname:'',
+      username:'',
+      password:'',
+      location:'',
+      biography:'',
+      photo:'',
     }
   }
 };
@@ -317,6 +317,12 @@ const app = Vue.createApp({
       welcome: 'Hello World! Welcome to VueJS',
       error:[],
       message:'',
+      fullname:'',
+      username:'',
+      password:'',
+      location:'',
+      biography:'',
+      photo:'',
     }
   },
   component:{
