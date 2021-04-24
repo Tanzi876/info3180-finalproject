@@ -233,20 +233,13 @@ template:`
 
     fetch('/api/register',{
       method:'POST',
-      body:{
-        "fullname":formdata.fullname,
-        "username":formdata.username,
-        "password":formdata.password,
-        "location":formdata.location,
-        "biography":formdata.biography,
-        "photo":formdata.photo
+      body:formdata,
+      headers:{
+        'X-CSRFToken':token,
+        'Content-Type': 'application/json'
       },
-      // headers:{
-      //   'X-CSRFToken':token,
-      //   'Content-Type': 'application/json'
-      // },
-      // credentials: 'same-origin'
-    }).then(resp => resp.text()).then(text => console.log(text))/*then(function(jsonResp){
+       credentials: 'same-origin'
+    }).then(resp => resp.text()).then(function(jsonResp){
       self.message=jsonResp.message;
       self.error=jsonResp.error;
       if(self.message){
@@ -254,7 +247,7 @@ template:`
       }else{
         console.log(self.error)
       }
-    })*/.catch(function(error){
+    }).catch(function(error){
       console.log(error)
     })
 
