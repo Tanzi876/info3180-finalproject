@@ -260,7 +260,13 @@ template:`
   data(){
     return{
       error:[],
-      message:''
+      message:'',
+      fullname:'',
+      username:'',
+      password:'',
+      location:'',
+      biography:'',
+      photo:'',
     }
   }
 };
