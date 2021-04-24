@@ -242,7 +242,7 @@ template:`
         "photo":formdata.photo
       },
       headers:{
-        //'X-CSRFToken':token,
+        'X-CSRFToken':token,
         'Content-Type': 'application/json'
       },
       credentials: 'same-origin'
