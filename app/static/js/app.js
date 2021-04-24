@@ -225,7 +225,7 @@ template:`
       </div>
     </div>
               `,
-  method:{
+  methods:{
     registerForm(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
