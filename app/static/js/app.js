@@ -51,9 +51,8 @@ const Explore={
         },
         data(){
           return{
-            car_make='',
-            car_model=''
-
+          car_make:'',
+          car_model:''
           }
         }
       
