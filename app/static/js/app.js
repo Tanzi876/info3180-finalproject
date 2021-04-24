@@ -234,10 +234,10 @@ template:`
     fetch('/api/register',{
       method:'POST',
       body:formdata,
-      headers:{
+      /*headers:{
         'X-CSRFToken':token,
         'Content-Type': 'application/json'
-      },
+      },*/
       credentials: 'same-origin'
     })
 
