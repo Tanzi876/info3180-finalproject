@@ -236,7 +236,7 @@ template:`
       body:formdata,
       headers:{
         'X-CSRFToken':token,
-        'Content-Type': application/json
+        'Content-Type': 'application/json'
       },
       credentials: 'same-origin'
     })
