@@ -1,152 +1,100 @@
 /* Add your Application JavaScript */
 
-// const Explore={
-//     name:'explore',
-//     template:`
-//     <div class ="row">
-//       <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
-//           <div class="form-group">
-//               <label for="car_make">Make</label>
-//               <input type="text" class="form-control" id="car_make" name="car_make">
-//           </div>
-//           <div class="form-group">
-//               <label for="car_model">Model</label>
-//               <input type="text" class="form-control" id="car_model" name="car_model">
-//           </div>
-//       </form>
-//     </div>
-//       `,
-//       methods:{
-//         search(){
-//             let search_query=document.getElementById('search-form');
-//             let formdata= new FormData(search_query);
-//             let self=this;
+const Explore={
+    name:'explore',
+    template:`
+    <div class ="row">
+      <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
+          <div class="input-group">
+          <div class="form-group">
+              <label for="car_make">Make</label>
+              <input type="text" class="form-control" id="car_make" name="car_make">
+          </div>
+           <div class="form-group">
+               <label for="car_model">Model</label>
+               <input type="text" class="form-control" id="car_model" name="car_model">
+           </div>
+          </div>
+      </form>
+      <button class="btn btn-primary">Search</button>
+    </div>
+      `,
+      methods:{
+        search(){
+            let search_query=document.getElementById('search-form');
+            let formdata= new FormData(search_query);
+            let self=this;
 
-//             fetch("/api/search",{
-//               method: 'GET',
-//               body:formdata,
-//               headers:{
-//                 'Authorization':'Bearer' +localStorage.getItem('token')
+            fetch("/api/search",{
+              method: 'GET',
+              body:formdata,
+              headers:{
+                'Authorization':'Bearer' +localStorage.getItem('token')
 
-//               },
-//               credentials:'same-origin'
+              },
+              credentials:'same-origin'
             
-//             })
-//             .then(function(response){
-//               return response.json();
-//             })
-//             .then(function(data){
-//               console.log(data.result)
-//               self.result=data.result;
+            })
+            .then(function(response){
+              return response.json();
+            })
+            .then(function(data){
+              console.log(data.result)
+              self.result=data.result;
             
-//             })
-//             .catch(function(error){
-//               console.log(error)
+            })
+            .catch(function(error){
+              console.log(error)
 
-//             })           
+            })           
 
-//         },
-//         data(){
-//           return{
-
-//           }
-//         }
+        },
+        data(){
+          return{
+          car_make:'',
+          car_model:''
+          }
+        }
       
-//       }
-// }
+      }
+}
 
-// const Login = Vue.component('login', {
-//     template:`
-//       <div>
-//         <form id="login-form" @submit.prevent="login">
-//             <div class="card-header center">
-//               <strong>Login to your account</strong>
-//             </div>
-//             <div class="card center">
-//               <div class="card-body login">
-//                 <div style="margin-top:5%;">
-//                   <label for='username'><strong>Username</strong></label><br>
-//                   <input type='text' id='username' name='username' style="width: 100%;"/>
-//                 </div>
-//                 <div style="margin-top:5%;">
-//                   <label for='password'><strong>Password</strong></label><br>
-//                   <input type='password' id='password' name='password' style="width: 100%;"/>
-//                 </div>
-//                 <div style="margin-top:5%;">
-//                   <button id="submit" class="btn btn-success">Login</button> 
-//                 </div>
-//                 <div v-if='messageFlag' style="margin-top:5%;">
-//                   <div class="alert alert-danger center" style="width: 100%; margin-top: 5%;">
-//                     {{ message }}
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//         </form>
-//       </div>
-//     `,
-//     methods:{
-//       login: function(){
-//         const self = this
+
+
+const Logout = {
+    name:'logout',
+    template: `
+    <div>
+    <div/>`,
+    created() {
+      let self = this;
       
-//         let login_data = document.getElementById('login-form');
-//         let login_form = new FormData(login_data);
-      
-//         fetch("/api/auth/login",{
-//           method: "POST",
-//           body: login_form,
-//           headers: {
-//           'X-CSRFToken': token
-//           },
-//           credentials: 'same-origin'
-//         }).then(function(response){
-//           return response.json();
-//         }).then(function(jsonResponse){
-//           self.messageFlag = true;
-        
-//           if(jsonResponse.hasOwnProperty("token")){
-//             cuser={"token":jsonResponse.token, id: jsonResponse.user_id};
-//             localStorage.current_user = JSON.stringify(cuser);
+      fetch('/api/auth/logout', {
+          method: 'GET',
+          headers: {
+              'X-CSRFToken': token,
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
+          },
+          credentials: 'same-origin'
+      })
+      .then(resp => resp.json())
+      .then(function(jsonResp) {
           
-//             router.go();
-//             router.push("/explore")
-//           }else{
-//             self.message = jsonResponse.errors
-//           }
-
-//         }).catch(function(error){
-//           self.messageFlag = false;
-//           console.log(error);
-//         });
-//       }
-//     },
-//     data: function(){
-//       return {
-//         messageFlag: false,
-//         message: ""
-//       }
-//     }
-// });
-
-// const Logout = Vue.component("logout", {
-//     template: `
-//     <div>
-//     <div/>`,
-//     created: function(){
-//         const self = this;
-//         fetch("api/auth/logout", {
-//         method: "GET"
-//     }).then(function(response){
-//       return response.json();
-//     }).then(function(jsonResponse){
-//       localStorage.removeItem("current_user");
-//       router.go();
-//       router.push("/");
-//     }).catch(function(error){
-//       console.log(error);
-//     });
-//   }
-// });
+          self.message = jsonResp.message;
+          self.error = jsonResp.error;
+          
+          if (self.message) {
+              localStorage.removeItem('token');
+              router.push({name: 'home', params: {response: self.message}})
+          } else {
+              router.push({name: 'home'})
+          }
+      })
+      .catch(function(error) {
+          console.log(error)
+      })
+  },
+};
 
 const Login = {
   name:'login',
@@ -178,8 +126,9 @@ const Login = {
         </div>
       </form>
     </div>`,
+    props:['response'],
   methods:{
-    login: function(){
+    login(){
     const self = this
       
     let login_data = document.getElementById('login-form');
@@ -192,38 +141,40 @@ const Login = {
         'X-CSRFToken': token
       },
       credentials: 'same-origin'
-    }).then(function(response){
-        return response.json();
-      }).then(function(jsonResponse){
-          self.messageFlag = true;
-        
-          if(jsonResponse.hasOwnProperty("token")){
-            cuser={"token":jsonResponse.token, id: jsonResponse.user_id};
-            localStorage.current_user = JSON.stringify(cuser);
-          
-            router.go();
-            router.push("/explore")
-          }else{
-            self.message = jsonResponse.errors
-          }
-        }).catch(function(error){
-          self.messageFlag = false;
-          console.log(error);
-          });
-    }
-  },
-  data: function(){
-    return {
-      messageFlag: false,
-      message: ""
-    }
-  }
+
+    })
+    .then(resp => resp.json())
+            .then(function(jsonResp) {
+                
+                self.message = jsonResp.message;
+                self.error = jsonResp.error;
+                
+                if (self.message) {
+                    let jwt_token = jsonResp.token
+                    localStorage.setItem('token', jwt_token);
+                    router.push({path: '/explore'})
+                } else {
+                    console.log(self.error);
+                }
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+        }
+    },
+    data: function() {
+        return {
+            message: '',
+            error: []
+        }
+    },
 };
 
-const Register ={
-  name:'register',
-  template:`
-    <div class= 'container centered'>
+const Register = {
+  name: 'register',
+template:`
+  
+ <div class= 'container centered'>
       <h1 class='page-header'>Register New User</h1>
       <ul class="">
         <li v-for="err in error" class="list alert alert-danger" role="alert">
@@ -231,75 +182,89 @@ const Register ={
         </li>
       </ul>
       <div>
-        <form id="register-form" @submit.prevent='register' enctype='multipart/form-data' novalidate>
+        <form id="register-form" @submit.prevent= 'registerForm' enctype='multipart/form-data' novalidate>
+          <div class ="input-group">
+
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username">
+            <input type="text"  class="form-control" id="username" name="username">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password">
+            <input type="password"  class="form-control" id="password" name="password">
           </div>
+
+          </div>
+          <div class= "input-group">
+
           <div class="form-group">
             <label for="fullname">Fullname</label>
-            <input type="text" class="form-control" id="fullname" name="fullname">
+            <input type="text"  class="form-control" id="fullname" name="fullname">
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email">
+            <input type="email"  class="form-control" id="email" name="email">
           </div>
+
+          </div>
+          
           <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" class="form-control" id="location" name="location">
+            <input type="text"  class="form-control" id="location" name="location">
           </div>
           <div class="form-group">
             <label for="biography">Biography</label>
-            <textarea id="biography" class="form-control" name="biography"></textarea>
+            <textarea id="biography"  class="form-control" name="biography"></textarea>
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input type="file" id="photo" class="form-control" name="profile_photo">
+            <input type="file" id="photo"  class="form-control" name="photo">
           </div>
           <button type="submit" class="btn btn-success">Register</button>
         </form>
       </div>
-    </div>`,
-  method:{
-    register:function(){
+    </div>
+              `,
+  methods:{
+    registerForm(){
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
-
+    console.log(formdata);
+    console.log(formdata.get('username'));
+    console.log(token);
     fetch('/api/register',{
       method:'POST',
-      body:formdata,
+      body: formdata,
       headers:{
         'X-CSRFToken':token
+        //,'Content-Type': 'multipart/form-data'
       },
-      credentials: 'same-origin'
-    })
-
-    .then(resp => resp.json())
-    .then(function(jsonRespone){
-      self.message=jsonRespone.message;
-      self.error=jsonRespone.error;
+       credentials: 'same-origin'
+    }).then(resp => resp.json()).then(function(jsonResp){
+      self.message=jsonResp.message;
+      self.error=jsonResp.error;
       if(self.message){
         router.push({path:'/login',params:{response:self.message}})
       }else{
         console.log(self.error)
       }
-    })
-    
-    .catch(function(error){
+    }).catch(function(error){
       console.log(error)
     })
 
     }
   },
-  data:function(){
+  data(){
     return{
       error:[],
-      message:''
+      message:'',
+      fullname:'',
+      username:'',
+      password:'',
+      location:'',
+      biography:'',
+      photo:''
     }
   }
 };
@@ -335,17 +300,41 @@ const Home ={
       }
     };
 
+    const NotFound = {
+      name: 'NotFound',
+      template: `
+      <div>
+          <h1>404 - Not Found</h1>
+      </div>
+      `,
+      data() {
+          return {}
+      }
+  };
+
 
 
 const app = Vue.createApp({
   data() {
     return {
-      welcome: 'Hello World! Welcome to VueJS'
+      welcome: 'Hello World! Welcome to VueJS',
+      error:[],
+      message:'',
+      fullname:'',
+      username:'',
+      password:'',
+      location:'',
+      biography:'',
+      photo:'',
     }
   },
   component:{
     'home':Home,
-    'register':Register    
+    'register':Register, 
+    'explore':Explore,
+    'login': Login,
+    'logout': Logout
+
   }
 });
 
@@ -354,7 +343,11 @@ const router=VueRouter.createRouter({
   routes:[
     {path:'/',component:Home},
     {path:'/register',component:Register},
-    {path:'/login',component:Login}
+    {path:'/login',component:Login},
+    {path: "/logout", name: "logout", component: Logout},
+    {path:'/explore',component:Explore}
+    //,{path: "*", component: NotFound}
+
   ]
 })
 
@@ -395,7 +388,7 @@ created() {
 },
   data() {
     return {
-      //User array
+      user:[],
     };
   },
   methods:{

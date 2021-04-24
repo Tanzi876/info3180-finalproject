@@ -1,6 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    {{ fontawesome_html() }}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>INFO3180 Final Project</title>
+    <title>United Auto Sale</title>
 
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
@@ -17,19 +19,9 @@
     {% block css %} {% endblock%}
   </head>
   <body>
-    <header>
-        {% include "header.html" %}
-    </header>
-    <main>
-        <div class="container">
-            {% block main %}{% endblock %}
-        </div>
-    </main>
-    <footer>
-        <div class="container">
-            {% include "footer.html" %}
-        </div>
-    </footer>
+    <div id="main">
+        {% block main %}{% endblock %}
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -37,8 +29,8 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
     <script src="{{ url_for('static', filename='js/vue-router.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>const token = "{{ csrf_token() }}";</script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% block js %} {% endblock%}
   </body>
 </html>

@@ -4,17 +4,17 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-# from logging import error
+
 import os,time, base64, jwt
 from functools import wraps
-from app import app,db,csrf
+from app import app,db,csrf,login_manager
 #  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
-# from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import RegisterForm,SearchForm
+from flask_login import login_user, logout_user, current_user, login_required
+from app.forms import RegisterForm,SearchForm,LoginForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask.helpers import get_flashed_messages, send_from_directory
 
 #Decorator functions for JWT Authentication
@@ -64,9 +64,11 @@ def get_Image(filename):
 @app.route("/api/register",methods=["POST"])
 def register():
     form=RegisterForm()
+    response = ''
+    print("HELLO I AM HERE NOW")
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data
+        password = generate_password_hash(form.password.data)
         fullname = form.fullname.data
         email = form.email.data
         location = form.location.data
@@ -87,10 +89,11 @@ def register():
         except Exception as e:
             print(e)
             response="Registration Failed"
-            return jsonify(error=response),400
+    response = form_errors(form)
+    return jsonify(error=response),400
 
 @app.route("/api/search",methods=["GET"])
-# @login_required
+@requires_auth
 def search():
     try:
         
@@ -111,9 +114,48 @@ def search():
         response="No Record Found"
         return jsonify(error=response),400
 
+@login_manager.user_loader
+def load_user(id):
+    return Users.query.get(int(id))
 
+@app.route("/api/auth/login", methods=["POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        
+        #Query the database for records matching the given username and password
+        user = db.session.query(Users).filter_by(username=username).first()
+        
+        if (check_password_hash(user.password, password)):
+            
+            login_user(user)
 
+            #creates bearer token 
+            jwt_token = jwt.encode({'id':user.id, 'user': user.username}, app.config['SECRET_KEY'], algorithm = 'HS256').decode('utf-8')
 
+            #Flash message for a successful login
+            response = "Your login was successful"
+            return jsonify(message=response, token=jwt_token), 200
+        else:
+            #Flash message for a failed login
+            response = "Incorrect username and password combination"
+            return jsonify(error=response), 400
+       
+    #Flash message to indicate a failed login
+    response = form_errors(form)
+    return jsonify(error=response)
+
+#Api route to Logout a user
+@app.route("/api/auth/logout", methods=["GET"])
+@requires_auth
+def logout():
+    logout_user()
+
+    #Flash message for successful logout
+    response = "You were logged out successfully."
+    return jsonify(message=response)
     
 
 # Please create all new routes and view functions above this route.
@@ -129,7 +171,7 @@ def index(path):
 
     Also we will render the initial webpage and then let VueJS take control.
     """
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 
 # Here we define a function to collect form errors from Flask-WTF
