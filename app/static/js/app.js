@@ -239,10 +239,7 @@ template:`
         'Content-Type': 'application/json'
       },*/
       credentials: 'same-origin'
-    })
-
-    .then(resp => resp.json())
-    .then(function(jsonResp){
+    }).then(resp => resp.json()).then(function(jsonResp){
       self.message=jsonResp.message;
       self.error=jsonResp.error;
       if(self.message){
@@ -250,9 +247,7 @@ template:`
       }else{
         console.log(self.error)
       }
-    })
-    
-    .catch(function(error){
+    }).catch(function(error){
       console.log(error)
     })
 
