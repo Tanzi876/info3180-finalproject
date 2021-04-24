@@ -328,8 +328,8 @@ const router=VueRouter.createRouter({
     {path:'/register',component:Register},
     {path:'/login',component:Login},
     {path: "/logout", name: "logout", component: Logout},
-    {path:'/explore',component:Explore},
-    {path: "*", component: NotFound}
+    {path:'/explore',component:Explore}
+    //,{path: "*", component: NotFound}
 
   ]
 })
