@@ -233,7 +233,14 @@ template:`
 
     fetch('api/register',{
       method:'POST',
-      body:formdata,
+      body:{
+        fullname:formdata.fullname,
+        username:formdata.username,
+        password:formdata.password,
+        location:formdata.location,
+        biography:formdata.biography,
+        photo:formdata.photo.filename,
+      },
       /*headers:{
         'X-CSRFToken':token,
         'Content-Type': 'application/json'
