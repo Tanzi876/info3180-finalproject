@@ -137,10 +137,10 @@ const Login = {
     fetch("/api/auth/login",{
       method: "POST",
       body: login_form,
-      headers: {
-        'X-CSRFToken': token
-      },
-      credentials: 'same-origin'
+      // headers: {
+      //   'X-CSRFToken': token
+      // },
+      // credentials: 'same-origin'
 
     })
     .then(resp => resp.json())
@@ -241,11 +241,11 @@ template:`
         "biography":formdata.biography,
         "photo":formdata.photo
       },
-      headers:{
-        'X-CSRFToken':token,
-        'Content-Type': 'application/json'
-      },
-      credentials: 'same-origin'
+      // headers:{
+      //   'X-CSRFToken':token,
+      //   'Content-Type': 'application/json'
+      // },
+      // credentials: 'same-origin'
     }).then(resp => resp.text()).then(text => console.log(text))/*then(function(jsonResp){
       self.message=jsonResp.message;
       self.error=jsonResp.error;
