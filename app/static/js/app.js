@@ -233,10 +233,10 @@ template:`
 
     fetch('/api/register',{
       method:'POST',
-      url:'/api/register,
       body:formdata,
       headers:{
-        'X-CSRFToken':token
+        'X-CSRFToken':token,
+        'Content-Type': application/json
       },
       credentials: 'same-origin'
     })
