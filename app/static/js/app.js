@@ -239,7 +239,7 @@ template:`
         password:formdata.password,
         location:formdata.location,
         biography:formdata.biography,
-        photo:formdata.photo.filename,
+        photo:formdata.photo,
       },
       /*headers:{
         'X-CSRFToken':token,
