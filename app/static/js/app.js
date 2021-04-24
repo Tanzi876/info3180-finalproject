@@ -218,7 +218,7 @@ template:`
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input type="file" id="photo" class="form-control" name="photo">
+            <input type="file" id="photo"  class="form-control" name="photo">
           </div>
           <button type="submit" class="btn btn-success">Register</button>
         </form>
@@ -261,12 +261,12 @@ template:`
     return{
       error:[],
       message:'',
-      fullname:'',
-      username:'',
-      password:'',
-      location:'',
-      biography:'',
-      photo:'',
+      // fullname:'',
+      // username:'',
+      // password:'',
+      // location:'',
+      // biography:'',
+      // photo:'',
     }
   }
 };
@@ -314,7 +314,9 @@ const Home ={
 const app = Vue.createApp({
   data() {
     return {
-      welcome: 'Hello World! Welcome to VueJS'
+      welcome: 'Hello World! Welcome to VueJS',
+      error:[],
+      message:'',
     }
   },
   component:{
