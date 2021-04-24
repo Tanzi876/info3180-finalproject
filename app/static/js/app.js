@@ -234,17 +234,17 @@ template:`
     fetch('api/register',{
       method:'POST',
       body:{
-        fullname:formdata.fullname,
-        username:formdata.username,
-        password:formdata.password,
-        location:formdata.location,
-        biography:formdata.biography,
-        photo:formdata.photo,
+        "fullname":formdata.fullname,
+        "username":formdata.username,
+        "password":formdata.password,
+        "location":formdata.location,
+        "biography":formdata.biography,
+        "photo":formdata.photo,
       },
-      /*headers:{
-        'X-CSRFToken':token,
+      headers:{
+        //'X-CSRFToken':token,
         'Content-Type': 'application/json'
-      },*/
+      },
       credentials: 'same-origin'
     }).then(resp => resp.json()).then(function(jsonResp){
       self.message=jsonResp.message;
