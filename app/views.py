@@ -4,7 +4,7 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-# from logging import error
+
 import os,time, base64, jwt
 from functools import wraps
 from app import app,db,csrf

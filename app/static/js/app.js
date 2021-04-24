@@ -383,7 +383,7 @@ created() {
 },
   data() {
     return {
-      //User array
+      user:[],
     };
   },
   methods:{
