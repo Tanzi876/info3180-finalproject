@@ -137,10 +137,10 @@ const Login = {
     fetch("/api/auth/login",{
       method: "POST",
       body: login_form,
-      // headers: {
-      //   'X-CSRFToken': token
-      // },
-      // credentials: 'same-origin'
+      headers: {
+        'X-CSRFToken': token
+      },
+      credentials: 'same-origin'
 
     })
     .then(resp => resp.json())
@@ -230,16 +230,18 @@ template:`
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
-
+    console.log(formdata);
+    console.log(formdata.get('username'));
+    console.log(token);
     fetch('/api/register',{
       method:'POST',
-      body:formdata,
+      body: formdata,
       headers:{
-        'X-CSRFToken':token,
-        'Content-Type': 'application/json'
+        'X-CSRFToken':token
+        //,'Content-Type': 'multipart/form-data'
       },
        credentials: 'same-origin'
-    }).then(resp => resp.text()).then(function(jsonResp){
+    }).then(resp => resp.json()).then(function(jsonResp){
       self.message=jsonResp.message;
       self.error=jsonResp.error;
       if(self.message){
@@ -262,7 +264,7 @@ template:`
       password:'',
       location:'',
       biography:'',
-      photo:'',
+      photo:''
     }
   }
 };
