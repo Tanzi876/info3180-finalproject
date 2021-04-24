@@ -65,7 +65,6 @@ def get_Image(filename):
 def register():
     form=RegisterForm()
     response = ''
-    print("HELLO I AM HERE NOW")
     if form.validate_on_submit():
         username = form.username.data
         password = generate_password_hash(form.password.data)
