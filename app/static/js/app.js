@@ -231,7 +231,7 @@ template:`
     let formdata= new FormData(userinfo);
     let self=this;
 
-    fetch('api/register',{
+    fetch('/api/register',{
       method:'POST',
       body:{
         "fullname":formdata.fullname,
