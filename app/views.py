@@ -5,31 +5,69 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 
-from logging import error
 import os,time, base64, jwt
-from app import app,db,csrf
+from functools import wraps
+from app import app,db,csrf,login_manager
 #  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
-# from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import RegisterForm,SearchForm
+from flask_login import login_user, logout_user, current_user, login_required
+from app.forms import RegisterForm,SearchForm,LoginForm
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
-from werkzeug.security import check_password_hash
-from flask.helpers import send_from_directory
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask.helpers import get_flashed_messages, send_from_directory
+
+#Decorator functions for JWT Authentication
+def requires_auth(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    auth = request.headers.get('Authorization', None)
+    if not auth:
+      return jsonify({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'}), 401
+
+    parts = auth.split()
+
+    if parts[0].lower() != 'bearer':
+      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}), 401
+    elif len(parts) == 1:
+      return jsonify({'code': 'invalid_header', 'description': 'Token not found'}), 401
+    elif len(parts) > 2:
+      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}), 401
+
+    token = parts[1]
+    try:
+         payload = jwt.decode(token, app.config['SECRET_KEY'])
+
+    except jwt.ExpiredSignature:
+        return jsonify({'code': 'token_expired', 'description': 'token is expired'}), 401
+    except jwt.DecodeError:
+        return jsonify({'code': 'token_invalid_signature', 'description': 'Token signature is invalid'}), 401
+
+    current_user = user = payload
+    return f(*args, **kwargs)
+
+  return decorated
+
+
+
 
 ###
 # Routing for your application.
 ###
 
-
+@app.route('/images/<filename>')
+def get_Image(filename):
+    rootdir = os.getcwd()
+    return send_from_directory(rootdir+"/"+app.config['IMAGES'],filename)
 
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])
 def register():
     form=RegisterForm()
+    response = ''
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data
+        password = generate_password_hash(form.password.data)
         fullname = form.fullname.data
         email = form.email.data
         location = form.location.data
@@ -50,10 +88,11 @@ def register():
         except Exception as e:
             print(e)
             response="Registration Failed"
-            return jsonify(error=response),400
+    response = form_errors(form)
+    return jsonify(error=response),400
 
 @app.route("/api/search",methods=["GET"])
-# @login_required
+@requires_auth
 def search():
     try:
         
@@ -67,7 +106,7 @@ def search():
             model=form.search_model.data
             result=Cars.query.filter_by(model=model).all()
             
-        return jsonify(result=result),200
+        return jsonify(message=result),200
     except Exception as e:
         print(e)
 
@@ -121,7 +160,7 @@ def index(path):
 
     Also we will render the initial webpage and then let VueJS take control.
     """
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 
 # Here we define a function to collect form errors from Flask-WTF
