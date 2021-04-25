@@ -9,7 +9,7 @@ import os,time, base64, jwt
 from app import app,db,csrf, login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import RegisterForm,SearchForm
+from app.forms import RegisterForm,SearchForm,AddCar
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
@@ -34,7 +34,7 @@ def register():
 
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        datejoin=time.strftime("%m/%d/%Y")
+        
         #Store to data
         try:
             user=Users(username, password, fullname, email, location, bio, filename,datejoin)
@@ -48,36 +48,65 @@ def register():
             response="Registration Failed"
             return jsonify(error=response),400
 
+@app.route("/api/cars",methods=["GET" ])
+@login_required
+def get_cars():
+
+    cars = db.session.query(Cars).all()
+    data = []
+
+    if cars == []:
+        return jsonify({"message": "No cars available", 'errors':[]})
+
+    for car in cars:
+        data.append({
+            'id': car.id,
+            'description': car.description,
+            'make': car.make,
+            'model': car.model,
+            'colour': car.colour,
+            'year': car.year,
+            'transmission': car.transmission,
+            'car_type': car.car_type,
+            'price': car.price,
+            'photo': car.filename,
+            'user_id': car.user_id
+        })
+    return jsonify(data=data), 201
+
 @app.route("/api/cars",methods=["POST"])
 @login_required
 def cars():
+
     form=AddCar()
-    if form.validate_on_submit():
-        make = form.make.data
-        model = form.model.data
-        colour = form.colour.data
-        year = form.year.data
-        transmission = form.transmission.data
-        car_type = form.car_type.data
-        description = form.description.data
-        price = form.price.data
-        user_id = form.user_id.data
-        photo = form.photo.data
 
-        filename = secure_filename(photo.filename)
-        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #Store to data
-        try:
-            cars=Cars(make, model, colour, year, transmission, car_type, description, price, user_id, filename)
-            db.session.add(user)
-            db.session.commit()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            make = form.make.data
+            model = form.model.data
+            colour = form.colour.data
+            year = form.year.data
+            transmission = form.transmission.data
+            car_type = form.car_type.data
+            description = form.description.data
+            price = form.price.data
+            user_id = form.user_id.data
+            photo = form.photo.data
 
-            response="Car Added"
-            return jsonify(message=response),201
-        except Exception as e:
-            print(e)
-            response="Failed To Add New Car"
-            return jsonify(error=response),400
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #Store to data
+            try:
+                cars=Cars(make, model, colour, year, transmission, car_type, description, price, user_id, filename)
+                db.session.add(cars)
+                db.session.commit()
+
+                response="Car Added"
+                return jsonify(message=response),201
+            except Exception as e:
+                print(e)
+                response="Failed To Add New Car"
+                return jsonify(error=response),400
 
 @app.route("/api/search",methods=["GET"])
 @login_required

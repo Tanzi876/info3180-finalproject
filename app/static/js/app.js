@@ -251,7 +251,22 @@ app.component('register',{
         }
     }
  })
+ /*app.component('cars', {
+    name: 'cars',
+    template: `
+    <div class= 'container centered'>
+        <h1 class='page-header'>View All Cars</h1>
+        <ul class="cars">
 
+        </ul>
+    </div>
+    `,
+    data() {
+        return {
+            year: (new Date).getFullYear()
+        }
+    }
+});*/
 const Explore={
     name:'explore',
     template:`
