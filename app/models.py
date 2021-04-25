@@ -77,7 +77,7 @@ class Favourites(db.Model):
             return str(self.id)  # python 3 support
 
     def __repr__(self):
-        return '<Cars %r>' % (self.id)
+        return '<Favourites %r>' % (self.id)
 
         
 
@@ -103,11 +103,7 @@ class Users(db.Model):
         self.biography=biography
         self.photo=photo
         self.date_joined=date_joined
-        
-        
 
-        
-        
     def is_authenticated(self):
         return True
 

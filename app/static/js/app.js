@@ -63,9 +63,7 @@ const Explore={
 
 const Logout = {
     name:'logout',
-    template: `
-    <div>
-    <div/>`,
+    template:'',
     created() {
       let self = this;
       
@@ -85,9 +83,9 @@ const Logout = {
           
           if (self.message) {
               localStorage.removeItem('token');
-              router.push({name: 'home', params: {response: self.message}})
+              router.push({path: '/'})
           } else {
-              router.push({name: 'home'})
+              
           }
       })
       .catch(function(error) {
@@ -151,9 +149,12 @@ const Login = {
                 
                 if (self.message) {
                     let jwt_token = jsonResp.token;
-                    let user_id = jsonResp.user_id
+                    let user_id = jsonResp.user_id;
                     localStorage.setItem('token', jwt_token);
                     localStorage.setItem('used_id',user_id);
+                    console.log(user_id);
+                    console.log("USER ID");
+                    console.log(localStorage.getItem('token'));
                     router.push({path: '/explore'})
                 } else {
                     console.log(self.error);
@@ -175,7 +176,6 @@ const Login = {
 const Register = {
   name: 'register',
 template:`
-  
  <div class= 'container centered'>
       <h1 class='page-header'>Register New User</h1>
       <ul class="">
@@ -244,7 +244,7 @@ template:`
       self.message=jsonResp.message;
       self.error=jsonResp.error;
       if(self.message){
-        router.push({path:'/login',params:{response:self.message}})
+        router.push({path: '/explore'})
       }else{
         console.log(self.error)
       }
@@ -271,17 +271,180 @@ template:`
 const NewCar = {
   name: 'NewCar',
   template:`
-    <div>
-      <h1>Add New Car</h1>
-    </div>`
+    <div class= 'container centered'>
+        <h1 class='page-header'>Add New Car</h1>
+        <ul class="">
+            <li v-for="err in error" class="list alert alert-danger" role="alert">
+                {{ err }}
+            </li>
+        </ul>
+        
+        <div>
+            <form id="AddCar" @submit.prevent= 'car' enctype='multipart/form-data' novalidate>
+                <div class="input-group">
+                  <div class="form-group">
+                    <label for="make">Make</label>
+                    <input type="text" class="form-control" id="make" name="make">
+                  </div>
+                  <div class="form-group">
+                      <label for="model">Model</label>
+                      <input type="text" class="form-control" id="model" name="model">
+                  </div>
+                </div>
+              <div class = "input-group">
+                  <div class="form-group">
+                    <label for="colour">Colour</label>
+                    <input type="text" class="form-control" id="colour" name="colour">
+                  </div>
+                  <div class="form-group">
+                      <label for="year">Year</label>
+                      <input type="text" class="form-control" id="year" name="year">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="transmission">Transmission</label>
+                    <select name="transmission" id="transmission" class="form-control">
+                      <option value="Automatic">Automatic</option>
+                      <option value="Standard">Standard</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="car_type">Car Type</label>
+                    <select name="car_type" id="car_type" class="form-control">
+                      <option value="SUV">SUV</option>
+                      <option value="Truck">Truck</option>
+                      <option value="Sedan">Sedan</option>
+                      <option value="Van">Van</option>
+                      <option value="Coupe">Coupe</option>
+                      <option value="Wagon">Wagon</option>
+                      <option value="Convertable">Convertable</option>
+                      <option value="Hybrid/Electric">Hybrid/Electric</option>
+                      <option value="Sports Car">Sports Car</option>
+                      <option value="Diesel">Diesel</option>
+                      <option value="Crossover">Crossover</option>
+                      <option value="Luxury Car">Luxury Car</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="form-control" name="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="decimal" class="form-control" id="price" name="price">
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Photo</label>
+                    <input type="file" id="photo" class="form-control" name="photo">
+                </div>
+            
+                <button type="submit" class="btn btn-success">Add Car</button>
+            </form>
+        </div>
+    </div>`,
+    methods:{
+      car(){
+        let carinfo=document.getElementById('AddCar');
+        let formdata= new FormData(carinfo);
+        let self=this;
+        fetch('/api/cars',{
+          method:'POST',
+          body:formdata,
+          headers:{
+            'X-CSRFToken':token
+          },
+          credentials: 'same-origin'
+          }).then(resp => resp.json()).then(function(jsonResp){
+            self.message=jsonResp.message;
+            self.error=jsonResp.error;
+            if(self.message){
+              router.push({path:'/explore',params:{response:self.message}})
+            }else{
+              console.log(self.error)
+            }
+          }).catch(function(error){
+              console.log(error)
+          })
+      }
+    },
+  data(){
+      return{
+          error:[],
+          message:''
+      }
+  }
 }
 
 const Cars = {
   name: 'Cars',
   template:`
-    <div>
-      <h1>Car</h1>
-    </div>`
+    <div class="card" id="viewCar>
+      <img :src="car.urlToImage" class="card-img-right" />
+    <div class="card-body">
+      <h2 class="card-name" >{{car.year}} {{ car.make }}</h2>
+      <p class="card-model">{{ car.model }}</p>
+      <p class="card-des">{{ car.description }}</p>
+      <p class="card-color">{{ car.colour }}</p>
+      <p class="card-price">{{ car.price }}</p>
+      <p class="card-type">{{ car.car_type }}</p>
+      <p class="card-trans">{{ car.transmission }}</p>
+      <button class="btn btn-success" type="button">Email Owner</button>
+      <i id="heart" class="fa fa-heart-o" v-on:click="favcar"></i>
+    </div>
+  </div>`,
+  methods: {
+    viewcar() {
+        //let viewdata = document.getElementById(viewCar);
+        let self = this;
+
+        fetch("/api/cars/<int:car_id>", {
+            method: 'GET',
+            /* body: 'viewdata', */
+            headers: {
+                'Authorization':'Bearer' +localStorage.getItem('token')
+            },
+            credentials:'same-origin' 
+        })
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data.result)
+            self.result=data.result;
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+    },
+    favcar() {
+        let self = this;
+
+        fetch('/api/cars/<int:car_id>/favourite', {
+            method: 'POST',
+            /* body: 'viewdata', */
+            headers: {
+                'Authorization':'Bearer' +localStorage.getItem('token')
+            },
+            credentials:'same-origin' 
+        })
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data.result)
+            self.result=data.result;
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+    }
+  }
+
 }
 
 const Users = {
@@ -290,6 +453,7 @@ const Users = {
     <div>
       <h1>Profile</h1>
           <h1>user</h1>
+          <p>{{welcome}}</p>
     </div>`,
     viewUser(){
       let self=this;
@@ -314,6 +478,7 @@ const Users = {
         console.log(result.user.name);
         }
         else{
+          console.log("NO DATA");
           self.result = response;
         }
       })
@@ -323,7 +488,8 @@ const Users = {
     },
   data(){
     return {
-      result: ''
+      result: '',
+      user_id: ''
     }
   }
 };
@@ -392,8 +558,10 @@ const app = Vue.createApp({
     'register':Register, 
     'explore':Explore,
     'login': Login,
-    'logout': Logout
-
+    'logout': Logout,
+    'user':Users,
+    'newCar':NewCar,
+    'cars':Cars
   }
 });
 
@@ -403,7 +571,7 @@ const router=VueRouter.createRouter({
     {path:'/',component:Home},
     {path:'/register',component:Register},
     {path:'/login',component:Login},
-    {path: "/logout", name: "logout", component: Logout},
+    {path: "/logout", component: Logout},
     {path:'/explore',component:Explore},
     {path:'/users/{user_id}',component:Users},
     {path:'/cars/new',component:NewCar},
@@ -428,25 +596,19 @@ app.component('app-header', {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <router-link to="#" class="nav-link">Add Car</router-link>
+                <router-link to="/cars/new" class="nav-link">Add Car</router-link>
                 </li>
                 <li class="nav-item active">
                 <router-link to="/explore" class="nav-link">Explore</router-link>
                 </li>
                 <li class="nav-item active">
-                <router-link to="#" class="nav-link">My Profile</router-link>
+                <router-link to="/users/{user_id}" class="nav-link">My Profile</router-link>
                 </li>
                 <li class="nav-item active">
                 <router-link to="/logout" class="nav-link">Logout</router-link>
                 </li>
                 <li class="nav-item active">
                 <router-link to="/explore" class="nav-link">Explore</router-link>
-                </li>
-                <li class="nav-item active">
-                <router-link to="/cars/new" class="nav-link">Add Car</router-link>
-                </li>
-                <li class="nav-item active">
-                <router-link to="/users/{user_id}" class="nav-link">My Profile</router-link>
                 </li>
               </ul>
             </div>
@@ -461,20 +623,17 @@ app.component('app-header', {
 created() {
     let self = this;
     self.user=localStorage.getItem('token');
-    self.user_id=localStorage.getItem('user_id');
-    console.log("UDER ID");
-    console.log(localStorage.getItem('user_id'));
+    console.log("header id")
 },
   data() {
     return {
-      user_id:localStorage.getItem('user_id')
     };
   },
   methods:{
     reload(){
         let self = this;
         self.user=localStorage.getItem('token');
-        self.user_id=localStorage.getItem('user_id')
+        self.user_id=localStorage.getItem('user_id');
     }
 }
 });

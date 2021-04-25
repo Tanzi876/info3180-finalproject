@@ -10,7 +10,7 @@ from functools import wraps
 from app import app,db,csrf,login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import RegisterForm,SearchForm,LoginForm
+from app.forms import RegisterForm,SearchForm,LoginForm,AddCar
 from app.models import Users,Favourites,Cars
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -56,17 +56,80 @@ def get_Image(filename):
     rootdir = os.getcwd()
     return send_from_directory(rootdir+"/"+app.config['IMAGES'],filename)
 
+#Get car details
+@app.route('/api/cars/<int:car_id>', methods = ['GET'])
+def viewcar(car_id):
+    car = Cars.query.filter_by(car_id=id).first()
+    if car is not None:
+        return jsonify(car=car),200
+    else:
+        response = "Car not found."
+        return jsonify(error=response),404 
+
+#Add car to favorites
+@app.route('/api/cars/<int:car_id>/favourite', methods = ['POST'])
+@login_required
+def favcar(car_id):
+    response = ''
+    if current_user.is_authenticated():
+        usid = current_user.get_id()
+        cid = Favourites.query.filter(car_id=car_id).one()
+        if cid is None:
+            fav = Favourites(cid, usid)
+            db.session.add(fav)
+            db.session.commit()
+
+            response = "Car added to favorites"
+            return jsonify(message=response),200
+        else:
+            response = "Car already a favorite"
+            return jsonify(error=response)
+    
+    else:
+        response = "Must be logged in to perform this action"
+    return jsonify(error=response),401
+
 @app.route("/api/cars",methods=['POST'])
 def cars():
-    return "hi"
+    form = AddCar()
+    response = ''
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            make = form.make.data
+            model = form.model.data
+            colour = form.colour.data
+            year = form.year.data
+            transmission = form.transmission.data
+            car_type = form.car_type.data
+            description = form.description.data
+            price = form.price.data
+            user_id = current_user.get_id()
+            photo = form.photo.data
+
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #Store to data
+            try:
+                cars=Cars(description, make, model, colour, year, transmission, car_type, price, filename, user_id)
+                db.session.add(cars)
+                db.session.commit()
+
+                response="Car Added"
+                return jsonify(message=response),201
+            except Exception as e:
+                print(e)
+                response="Failed To Add New Car"
+    response = form_errors(form)
+    return jsonify(error=response),400
 
 @app.route("/api/users/{user_id}",methods=['GET'])
-@requires_auth
+#@requires_auth
 def users(user_id):
     user = []
-    userinfo = db.session.query(Users).filter_by(id="1")
+    userinfo = db.session.query(Users).filter_by(id=current_user.get_id())
     print("USER INFO")
-    print(userinfo)
+    print(userinfo.name)
     user.append({
         'name': userinfo.name,
         'username': userinfo.username,
@@ -75,7 +138,7 @@ def users(user_id):
         'location': userinfo.location,
         'date_joined': userinfo.date_joined
         })
-    return jsonify(data ={"user":user}, message="Success"),200
+    return jsonify(data ={"user":user},user_id=userinfo.id, message="Success"),200
 
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])
@@ -148,6 +211,7 @@ def login():
             login_user(user)
             print("USER")
             print(user.id)
+            print(current_user.get_id())
 
             #creates bearer token 
             jwt_token = jwt.encode({'id':user.id, 'user': user.username}, app.config['SECRET_KEY'], algorithm = 'HS256').decode('utf-8')
