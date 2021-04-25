@@ -8,7 +8,6 @@ This file creates your application.
 import os,time, base64, jwt
 from functools import wraps
 from app import app,db,csrf,login_manager
-#  login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import RegisterForm,SearchForm,LoginForm
@@ -48,9 +47,6 @@ def requires_auth(f):
 
   return decorated
 
-
-
-
 ###
 # Routing for your application.
 ###
@@ -60,12 +56,32 @@ def get_Image(filename):
     rootdir = os.getcwd()
     return send_from_directory(rootdir+"/"+app.config['IMAGES'],filename)
 
+@app.route("/api/cars",methods=['POST'])
+def cars():
+    return "hi"
+
+@app.route("/api/users/{user_id}",methods=['GET'])
+@requires_auth
+def users(user_id):
+    user = []
+    userinfo = db.session.query(Users).filter_by(id="1")
+    print("USER INFO")
+    print(userinfo)
+    user.append({
+        'name': userinfo.name,
+        'username': userinfo.username,
+        'biography': userinfo.biography,
+        'email': userinfo.email,
+        'location': userinfo.location,
+        'date_joined': userinfo.date_joined
+        })
+    return jsonify(data ={"user":user}, message="Success"),200
+
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])
 def register():
     form=RegisterForm()
     response = ''
-    print("HELLO I AM HERE NOW")
     if form.validate_on_submit():
         username = form.username.data
         password = generate_password_hash(form.password.data)
@@ -92,11 +108,10 @@ def register():
     response = form_errors(form)
     return jsonify(error=response),400
 
-@app.route("/api/search",methods=["GET"])
-@requires_auth
+@app.route("/api/explore",methods=["GET"])
+@login_required
 def search():
     try:
-        
         form=SearchForm()
     
         if form.search_make.data:
@@ -131,13 +146,15 @@ def login():
         if (check_password_hash(user.password, password)):
             
             login_user(user)
+            print("USER")
+            print(user.id)
 
             #creates bearer token 
             jwt_token = jwt.encode({'id':user.id, 'user': user.username}, app.config['SECRET_KEY'], algorithm = 'HS256').decode('utf-8')
 
             #Flash message for a successful login
             response = "Your login was successful"
-            return jsonify(message=response, token=jwt_token), 200
+            return jsonify(message=response, token=jwt_token, user_id=user.id), 200
         else:
             #Flash message for a failed login
             response = "Incorrect username and password combination"

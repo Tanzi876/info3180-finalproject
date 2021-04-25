@@ -25,7 +25,7 @@ const Explore={
             let formdata= new FormData(search_query);
             let self=this;
 
-            fetch("/api/search",{
+            fetch("/api/explore",{
               method: 'GET',
               body:formdata,
               headers:{
@@ -150,8 +150,10 @@ const Login = {
                 self.error = jsonResp.error;
                 
                 if (self.message) {
-                    let jwt_token = jsonResp.token
+                    let jwt_token = jsonResp.token;
+                    let user_id = jsonResp.user_id
                     localStorage.setItem('token', jwt_token);
+                    localStorage.setItem('used_id',user_id);
                     router.push({path: '/explore'})
                 } else {
                     console.log(self.error);
@@ -230,9 +232,6 @@ template:`
     let userinfo=document.getElementById('register-form');
     let formdata= new FormData(userinfo);
     let self=this;
-    console.log(formdata);
-    console.log(formdata.get('username'));
-    console.log(token);
     fetch('/api/register',{
       method:'POST',
       body: formdata,
@@ -269,6 +268,66 @@ template:`
   }
 };
 
+const NewCar = {
+  name: 'NewCar',
+  template:`
+    <div>
+      <h1>Add New Car</h1>
+    </div>`
+}
+
+const Cars = {
+  name: 'Cars',
+  template:`
+    <div>
+      <h1>Car</h1>
+    </div>`
+}
+
+const Users = {
+  name: 'Users',
+  template:`
+    <div>
+      <h1>Profile</h1>
+          <h1>user</h1>
+    </div>`,
+    viewUser(){
+      let self=this;
+      console.log("View User");
+      console.log(token);
+      console.log("Local token");
+      console.log(localStorage.getItem(token));
+      fetch('/api/users/{user_id}',{
+        method:'GET',
+        headers:{
+          'Authorization':'Bearer ' + localStorage.getItem(token)
+        },
+         credentials: 'same-origin'
+      })
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(response){
+        if (response.data){
+        let result = response.data;
+        console.log("HERE");
+        console.log(result.user.name);
+        }
+        else{
+          self.result = response;
+        }
+      })
+      .catch(function(error){
+        self.result= "error";
+      })
+    },
+  data(){
+    return {
+      result: ''
+    }
+  }
+};
+
 
 const Home ={
   name:'Home',
@@ -300,7 +359,7 @@ const Home ={
       }
     };
 
-    const NotFound = {
+const NotFound = {
       name: 'NotFound',
       template: `
       <div>
@@ -345,7 +404,10 @@ const router=VueRouter.createRouter({
     {path:'/register',component:Register},
     {path:'/login',component:Login},
     {path: "/logout", name: "logout", component: Logout},
-    {path:'/explore',component:Explore}
+    {path:'/explore',component:Explore},
+    {path:'/users/{user_id}',component:Users},
+    {path:'/cars/new',component:NewCar},
+    {path:'/cars/{car_id}',component:Cars}
     //,{path: "*", component: NotFound}
 
   ]
@@ -371,6 +433,15 @@ app.component('app-header', {
                 <li class="nav-item active">
                 <router-link to="/login" class="nav-link">Login</router-link>
                 </li>
+                <li class="nav-item active">
+                <router-link to="/explore" class="nav-link">Explore</router-link>
+                </li>
+                <li class="nav-item active">
+                <router-link to="/cars/new" class="nav-link">Add Car</router-link>
+                </li>
+                <li class="nav-item active">
+                <router-link to="/users/{user_id}" class="nav-link">My Profile</router-link>
+                </li>
               </ul>
             </div>
           </nav>
@@ -384,18 +455,20 @@ app.component('app-header', {
 created() {
     let self = this;
     self.user=localStorage.getItem('token');
-    self.userid=localStorage.getItem('userid')
+    self.user_id=localStorage.getItem('user_id');
+    console.log("UDER ID");
+    console.log(localStorage.getItem('user_id'));
 },
   data() {
     return {
-      user:[],
+      user_id:localStorage.getItem('user_id')
     };
   },
   methods:{
     reload(){
         let self = this;
         self.user=localStorage.getItem('token');
-        self.userid=localStorage.getItem('userid')
+        self.user_id=localStorage.getItem('user_id')
     }
 }
 });
