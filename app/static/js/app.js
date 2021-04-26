@@ -443,6 +443,9 @@ app.component('app-header', {
                 <router-link to="#" class="nav-link">My Profile</router-link>
                 </li>
                 <li class="nav-item active">
+                <router-link to="#" class="nav-link">View Car</router-link>
+                </li>
+                <li class="nav-item active">
                 <router-link to="/logout" class="nav-link">Logout</router-link>
                 </li>
               </ul>
