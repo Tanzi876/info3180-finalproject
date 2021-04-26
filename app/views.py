@@ -51,24 +51,46 @@ def requires_auth(f):
 # Routing for your application.
 ###
 
+#Get webpage photos
 @app.route('/images/<filename>')
 def get_Image(filename):
     rootdir = os.getcwd()
     return send_from_directory(rootdir+"/"+app.config['IMAGES'],filename)
 
-#Get car details
-@app.route('/api/cars/<int:car_id>', methods = ['GET'])
+#Get uploaded photos
+@app.route('/uploads/<filename>')
+def get_Uploads(filename):
+    rootdir = os.getcwd()
+    return send_from_directory(rootdir+"/"+app.config['UPLOAD_FOLDER'],filename)
+
+#Get a specific car details from the database
+@app.route('/api/cars/<car_id>', methods = ['GET'])
+#@requires_auth
 def viewcar(car_id):
-    car = Cars.query.filter_by(car_id=id).first()
+    car = Cars.query.filter_by(id=car_id).first()
+
     if car is not None:
-        return jsonify(car=car),200
+        data ={
+                'id': car.id,
+                'description': car.description,
+                'make': car.make,
+                'model': car.model,
+                'colour': car.colour,
+                'year': car.year,
+                'transmission': car.transmission,
+                'car_type': car.car_type,
+                'price': car.price,
+                'photo': "/uploads/" + car.photo,
+                'user_id': car.user_id
+            }
+        return jsonify(car=data),200
     else:
         response = "Car not found."
         return jsonify(error=response),404 
 
 #Add car to favorites
-@app.route('/api/cars/<int:car_id>/favourite', methods = ['POST'])
-@login_required
+@app.route('/api/cars/<car_id>/favourite', methods = ['POST'])
+@requires_auth
 def favcar(car_id):
     response = ''
     if current_user.is_authenticated():
@@ -89,8 +111,11 @@ def favcar(car_id):
         response = "Must be logged in to perform this action"
     return jsonify(error=response),401
 
+#Save new cars to the Database
 @app.route("/api/cars",methods=['POST'])
+@requires_auth
 def cars():
+
     form = AddCar()
     response = ''
 
@@ -123,22 +148,71 @@ def cars():
     response = form_errors(form)
     return jsonify(error=response),400
 
-@app.route("/api/users/{user_id}",methods=['GET'])
-#@requires_auth
+#Get Cars from Database
+@app.route("/api/cars",methods=['GET'])
+@requires_auth
+def get_cars():
+    print("GET CAR")
+    if request.method == 'GET':
+        cars = db.session.query(Cars).all()
+        data = []
+        print("GET CAR INFORMATION")
+        print(cars)
+
+        if cars == []:
+            return jsonify({"message": "No cars available", 'errors':[]})
+
+        for car in cars:
+            data.append({
+                'id': car.id,
+                'description': car.description,
+                'make': car.make,
+                'model': car.model,
+                'colour': car.colour,
+                'year': car.year,
+                'transmission': car.transmission,
+                'car_type': car.car_type,
+                'price': car.price,
+                'photo': "/uploads/" + car.photo,
+                'user_id': car.user_id
+            })
+        return jsonify(data=data), 201
+
+#Get user information
+@app.route("/api/users/<user_id>",methods=['GET'])
+@requires_auth
 def users(user_id):
     user = []
-    userinfo = db.session.query(Users).filter_by(id=current_user.get_id())
-    print("USER INFO")
-    print(userinfo.name)
-    user.append({
-        'name': userinfo.name,
-        'username': userinfo.username,
-        'biography': userinfo.biography,
-        'email': userinfo.email,
-        'location': userinfo.location,
-        'date_joined': userinfo.date_joined
-        })
-    return jsonify(data ={"user":user},user_id=userinfo.id, message="Success"),200
+    try:
+        userinfo = db.session.query(Users).filter_by(id=user_id).first()
+        print("USER INFO")
+        print(userinfo)
+        print("USER Name")
+        print(userinfo.id)
+        user={
+            'name': userinfo.name,
+            'username': userinfo.username,
+            'biography': userinfo.biography,
+            'email': userinfo.email,
+            'location': userinfo.location,
+            'date_joined': userinfo.date_joined,
+            'photo': "/uploads/"+ userinfo.photo
+            }
+        return jsonify(data=user,message="Success"),200
+    except Exception as e:
+        print(e)
+        response="Failed"
+        return jsonify(error=response),400
+
+@app.route("/api/users/<user_id>/favourites")
+@requires_auth
+def usersFav(user_id):
+    cars =[]
+    favs = []
+    #try:
+        #favs = db.session.query(Favourites).filter_by(user_id=user_id)
+    
+
 
 #Accepts user information and saves it to the database
 @app.route("/api/register",methods=["POST"])
@@ -171,31 +245,65 @@ def register():
     response = form_errors(form)
     return jsonify(error=response),400
 
-@app.route("/api/explore",methods=["GET"])
-@login_required
+#Search Car by make or model annd return the cars
+@app.route("/api/search",methods=['GET'])
+@requires_auth
 def search():
-    try:
-        form=SearchForm()
-    
-        if form.search_make.data:
-            make=form.search_make.data
-            result= Cars.query.filter_by(make=make).all()
+    form=SearchForm()
+    response = ''
+    data = []
+    if form.validate_on_submit():
+        try:
+            if form.search_make.data:
+                make=form.search_make.data
+                print("MAKE")
+                print(make)
+                cars= Cars.query.filter_by(make=make).all()
+                for car in cars:
+                    data.append({
+                    'id': car.id,
+                    'description': car.description,
+                    'make': car.make,
+                    'model': car.model,
+                    'colour': car.colour,
+                    'year': car.year,
+                    'transmission': car.transmission,
+                    'car_type': car.car_type,
+                    'price': car.price,
+                    'photo': "/uploads/" + car.photo,
+                    'user_id': car.user_id
+                    })
 
-        if form.search_model.data:
-            model=form.search_model.data
-            result=Cars.query.filter_by(model=model).all()
-            
-        return jsonify(message=result),200
-    except Exception as e:
-        print(e)
-
-        response="No Record Found"
-        return jsonify(error=response),400
+            if form.search_model.data:
+                model=form.search_model.data
+                cars=Cars.query.filter_by(model=model).all()
+                for car in cars:
+                    data.append({
+                    'id': car.id,
+                    'description': car.description,
+                    'make': car.make,
+                    'model': car.model,
+                    'colour': car.colour,
+                    'year': car.year,
+                    'transmission': car.transmission,
+                    'car_type': car.car_type,
+                    'price': car.price,
+                    'photo': "/uploads/" + car.photo,
+                    'user_id': car.user_id
+                    })
+                
+            return jsonify(data=data,message="success"),200
+        except Exception as e:
+         print(e)
+         response="No Record Found"
+    response = form_errors(form)
+    return jsonify(error=response),400
 
 @login_manager.user_loader
 def load_user(id):
     return Users.query.get(int(id))
 
+#Login User
 @app.route("/api/auth/login", methods=["POST"])
 def login():
     form = LoginForm()
@@ -209,9 +317,6 @@ def login():
         if (check_password_hash(user.password, password)):
             
             login_user(user)
-            print("USER")
-            print(user.id)
-            print(current_user.get_id())
 
             #creates bearer token 
             jwt_token = jwt.encode({'id':user.id, 'user': user.username}, app.config['SECRET_KEY'], algorithm = 'HS256').decode('utf-8')

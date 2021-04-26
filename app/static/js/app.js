@@ -3,8 +3,8 @@
 const Explore={
     name:'explore',
     template:`
-    <div class ="row">
-      <form id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
+    <div class ="row card">
+      <form class="card-body" id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
           <div class="input-group">
           <div class="form-group">
               <label for="car_make">Make</label>
@@ -15,47 +15,71 @@ const Explore={
                <input type="text" class="form-control" id="car_model" name="car_model">
            </div>
           </div>
+          <div>
+            <button type="submit" class="btn btn-success">Search</button>
+          </div>
       </form>
-      <button class="btn btn-primary">Search</button>
     </div>
-      `,
+    <div class="card-deck">
+      <div v-for="car in cars" class="card" style="width: 18rem;">
+        <img :src='car.photo' class="card-img-top" alt="">
+        <div class="card-body">
+          <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+          <p class="card-text">{{car.model}}</p>
+          <a @click='getCar(car.id)' class="btn btn-primary" >View more details</a>
+        </div>
+      </div>
+    </div>`,
+      data(){
+        return{
+        car_make:'',
+        car_model:'',
+        cars: []
+        }
+      },
+      created(){
+        let self = this;
+        fetch("/api/cars",{
+          method: 'GET',
+          headers:{
+            'Authorization':'Bearer ' +localStorage.getItem('token')
+          },
+          credentials:'same-origin'
+        })
+        .then(resp => resp.json())
+        .then(function(jsonResp) {
+          self.cars = jsonResp.data;
+        })
+        .catch(function(error){
+          console.log(error)
+        })  
+      },
       methods:{
         search(){
-            let search_query=document.getElementById('search-form');
-            let formdata= new FormData(search_query);
             let self=this;
 
-            fetch("/api/explore",{
+            fetch("/api/search",{
               method: 'GET',
-              body:formdata,
               headers:{
-                'Authorization':'Bearer' +localStorage.getItem('token')
-
+                'Authorization':'Bearer ' +localStorage.getItem('token')
               },
               credentials:'same-origin'
             
             })
-            .then(function(response){
-              return response.json();
-            })
-            .then(function(data){
-              console.log(data.result)
-              self.result=data.result;
-            
+            .then(resp => resp.json())
+            .then(function(jsonResp) {
+              self.message = jsonResp.message;
+              self.error = jsonResp.error;
+              self.cars = jsonResp.data;
             })
             .catch(function(error){
-              console.log(error)
-
+              console.log(error);
             })           
 
         },
-        data(){
-          return{
-          car_make:'',
-          car_model:''
-          }
+        getCar(id){
+          router.push({path: '/cars/'+ id});
         }
-      
       }
 }
 
@@ -63,7 +87,7 @@ const Explore={
 
 const Logout = {
     name:'logout',
-    template:'',
+    template:'<div></div>',
     created() {
       let self = this;
       
@@ -83,7 +107,8 @@ const Logout = {
           
           if (self.message) {
               localStorage.removeItem('token');
-              router.push({path: '/'})
+              localStorage.removeItem('user_id');
+              router.push({path: '/'});
           } else {
               
           }
@@ -91,18 +116,16 @@ const Logout = {
       .catch(function(error) {
           console.log(error)
       })
-  },
+  }
 };
 
 const Login = {
   name:'login',
   template :`
-    <div>
+    <div class= 'container centered'>
+      <h1 class="page-header">Login to your account</h1>
       <form id="login-form" @submit.prevent="login">
-        <div class="card-header center">
-          <strong>Login to your account</strong>
-        </div>
-        <div class="card center">
+        <div class="card" style="width: 18rem;">
           <div class="card-body login">
             <div style="margin-top:5%;">
               <label for='username'><strong>Username</strong></label><br>
@@ -151,10 +174,7 @@ const Login = {
                     let jwt_token = jsonResp.token;
                     let user_id = jsonResp.user_id;
                     localStorage.setItem('token', jwt_token);
-                    localStorage.setItem('used_id',user_id);
-                    console.log(user_id);
-                    console.log("USER ID");
-                    console.log(localStorage.getItem('token'));
+                    localStorage.setItem('user_id',user_id);
                     router.push({path: '/explore'})
                 } else {
                     console.log(self.error);
@@ -186,17 +206,16 @@ template:`
       <div>
         <form id="register-form" @submit.prevent= 'registerForm' enctype='multipart/form-data' novalidate>
           <div class ="input-group">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text"  class="form-control" id="username" name="username">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password"  class="form-control" id="password" name="password">
+            </div>
+          </div>
 
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text"  class="form-control" id="username" name="username">
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password"  class="form-control" id="password" name="password">
-          </div>
-
-          </div>
           <div class= "input-group">
 
           <div class="form-group">
@@ -356,7 +375,8 @@ const NewCar = {
           method:'POST',
           body:formdata,
           headers:{
-            'X-CSRFToken':token
+            'X-CSRFToken':token,
+            'Authorization':'Bearer ' +localStorage.getItem('token')
           },
           credentials: 'same-origin'
           }).then(resp => resp.json()).then(function(jsonResp){
@@ -383,50 +403,50 @@ const NewCar = {
 const Cars = {
   name: 'Cars',
   template:`
-    <div class="card" id="viewCar>
-      <img :src="car.urlToImage" class="card-img-right" />
-    <div class="card-body">
-      <h2 class="card-name" >{{car.year}} {{ car.make }}</h2>
-      <p class="card-model">{{ car.model }}</p>
-      <p class="card-des">{{ car.description }}</p>
-      <p class="card-color">{{ car.colour }}</p>
-      <p class="card-price">{{ car.price }}</p>
-      <p class="card-type">{{ car.car_type }}</p>
-      <p class="card-trans">{{ car.transmission }}</p>
-      <button class="btn btn-success" type="button">Email Owner</button>
-      <i id="heart" class="fa fa-heart-o" v-on:click="favcar"></i>
-    </div>
-  </div>`,
-  methods: {
-    viewcar() {
-        //let viewdata = document.getElementById(viewCar);
-        let self = this;
+    <div id="viewCar">
+      <div class= "card">
+        <div>
+          <img :src='car.photo'/>
+        </div>
+        <div>
+          <div class="card-body">
+            <h2 class="card-title" >{{car.year}} {{ car.make }}</h2>
+            <p class="card-model">{{ car.model }}</p>
+            <p class="card-des">{{ car.description }}</p>
+            <p class="card-color">{{ car.colour }}</p>
+            <p class="card-price">{{ car.price }}</p>
+            <p class="card-type">{{ car.car_type }}</p>
+            <p class="card-trans">{{ car.transmission }}</p>
+            <button class="btn btn-success" type="button">Email Owner</button>
+            <i id="heart" class="fa fa-heart-o" v-on:click="favcar"></i>
+          </div>
+        </div>
+      </div>
+    </div>`,
+  created() {
+    let self = this;
 
-        fetch("/api/cars/<int:car_id>", {
-            method: 'GET',
-            /* body: 'viewdata', */
-            headers: {
-                'Authorization':'Bearer' +localStorage.getItem('token')
-            },
-            credentials:'same-origin' 
-        })
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(data) {
-            console.log(data.result)
-            self.result=data.result;
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-    },
+    fetch("/api/cars/"+this.$route.params.car_id, {
+        method: 'GET',
+        headers: {
+            'Authorization':'Bearer ' + localStorage.getItem('token')
+        },
+        credentials:'same-origin' 
+    })
+    .then(resp => resp.json())
+    .then(function(jsonResp) {
+      self.car = jsonResp.car;
+    })
+    .catch(function(error) {
+        console.log(error)
+    })
+},
+  methods: {
     favcar() {
         let self = this;
 
-        fetch('/api/cars/<int:car_id>/favourite', {
+        fetch('/api/cars/'+this.$route.params.car_id+'/favourite', {
             method: 'POST',
-            /* body: 'viewdata', */
             headers: {
                 'Authorization':'Bearer' +localStorage.getItem('token')
             },
@@ -442,6 +462,11 @@ const Cars = {
         .catch(function(error) {
             console.log(error)
         })
+    }
+  },
+  data(){
+    return{
+      car: ''
     }
   }
 
@@ -451,47 +476,86 @@ const Users = {
   name: 'Users',
   template:`
     <div>
-      <h1>Profile</h1>
-          <h1>user</h1>
-          <p>{{welcome}}</p>
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img :src='user.photo' class="card-img" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{user.name}}</h5>
+              <p class="card-text">{{user.biography}}</p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-deck">
+        <div v-for="car in cars" class="card" style="width: 18rem;">
+          <img :src='car.photo' class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+            <p class="card-text">{{car.model}}</p>
+            <a href='/api/cars/{{car.id}}' class="btn btn-primary">View more details</a>
+          </div>
+        </div>
+      </div>
     </div>`,
-    viewUser(){
-      let self=this;
-      console.log("View User");
-      console.log(token);
-      console.log("Local token");
-      console.log(localStorage.getItem(token));
-      fetch('/api/users/{user_id}',{
-        method:'GET',
-        headers:{
-          'Authorization':'Bearer ' + localStorage.getItem(token)
-        },
-         credentials: 'same-origin'
-      })
-      .then(function(response){
-        return response.json();
-      })
-      .then(function(response){
-        if (response.data){
-        let result = response.data;
-        console.log("HERE");
-        console.log(result.user.name);
-        }
-        else{
-          console.log("NO DATA");
-          self.result = response;
-        }
-      })
-      .catch(function(error){
-        self.result= "error";
-      })
+      fav(){
+        let self=this;
+        fetch('/api/users/'+this.$route.params.user_id+'favourites',{
+          method:'GET',
+          headers:{
+            'Authorization':'Bearer ' + localStorage.getItem('token')
+          },
+          credentials: 'same-origin'
+        })
+        .then(resp => resp.json())
+        .then(function(jsonResp) {
+          self.cars = jsonResp.data;
+        })
+        .catch(function(error){
+          console.log(error);
+        })
+      },
+    created(){
+        let self=this;
+        fetch('/api/users/'+this.$route.params.user_id,{
+          method:'GET',
+          headers:{
+            'Authorization':'Bearer ' + localStorage.getItem('token')
+          },
+          credentials: 'same-origin'
+        })
+        .then(function(response){
+          return response.json();
+        })
+        .then(function(response){
+          self.message = response.message;
+          self.error = response.error;
+
+          if (self.message){
+            self.user = response.data;
+            console.log(self.user);
+            
+          }
+          else{
+            console.log("NO DATA");
+            self.result = response;
+          }
+        })
+        .catch(function(error){
+          console.log(error);
+        })
+      //fav(); 
     },
-  data(){
-    return {
-      result: '',
-      user_id: ''
+    data(){
+      return {
+        result: '',
+        user: [],
+        cars: []
+      }
     }
-  }
 };
 
 
@@ -573,9 +637,9 @@ const router=VueRouter.createRouter({
     {path:'/login',component:Login},
     {path: "/logout", component: Logout},
     {path:'/explore',component:Explore},
-    {path:'/users/{user_id}',component:Users},
+    {path:'/users/:user_id',component:Users},
     {path:'/cars/new',component:NewCar},
-    {path:'/cars/{car_id}',component:Cars}
+    {path:'/cars/:car_id',component:Cars}
     //,{path: "*", component: NotFound}
 
   ]
@@ -594,22 +658,29 @@ app.component('app-header', {
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <router-link to="/cars/new" class="nav-link">Add Car</router-link>
+              <ul class="navbar-nav mr-auto" v-if='checkLogin() == true'>
+                <li class="nav-item active">
+                  <router-link to="/cars/new" class="nav-link">Add Car</router-link>
                 </li>
                 <li class="nav-item active">
-                <router-link to="/explore" class="nav-link">Explore</router-link>
+                  <router-link to="/explore" class="nav-link">Explore</router-link>
                 </li>
                 <li class="nav-item active">
-                <router-link to="/users/{user_id}" class="nav-link">My Profile</router-link>
+                  <router-link v-bind:to='userPath' class="nav-link">My Profile</router-link>
                 </li>
-                <li class="nav-item active">
-                <router-link to="/logout" class="nav-link">Logout</router-link>
-                </li>
-                <li class="nav-item active">
-                <router-link to="/explore" class="nav-link">Explore</router-link>
-                </li>
+              </ul>
+              <ul class="navbar-nav mr-auto" v-if='checkLogin() == true'>
+                  <li class="nav-item active">
+                    <router-link to="/logout" class="nav-link">Logout</router-link>
+                  </li>
+              </ul>
+              <ul class="navbar-nav mr-auto" v-if='checkLogin() == false'>
+                  <li class="nav-item active">
+                    <router-link to="/register" class="nav-link">Register</router-link>
+                  </li>
+                  <li class="nav-item active">
+                    <router-link to="/login" class="nav-link">Login</router-link>
+                  </li>
               </ul>
             </div>
           </nav>
@@ -623,10 +694,11 @@ app.component('app-header', {
 created() {
     let self = this;
     self.user=localStorage.getItem('token');
-    console.log("header id")
 },
   data() {
     return {
+      user_id:'',
+      userPath: "/users/" + localStorage.getItem('user_id')
     };
   },
   methods:{
@@ -634,6 +706,18 @@ created() {
         let self = this;
         self.user=localStorage.getItem('token');
         self.user_id=localStorage.getItem('user_id');
+    },
+    checkLogin(){
+      console.log("RUNNING CHECK");
+      if (localStorage.getItem('token') !== null) 
+      {
+        console.log("TRUE");
+        return true;
+      }
+      else{
+        console.log("FALSE");
+        return false;
+      }
     }
 }
 });
