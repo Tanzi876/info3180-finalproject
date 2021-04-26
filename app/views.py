@@ -152,12 +152,9 @@ def cars():
 @app.route("/api/cars",methods=['GET'])
 @requires_auth
 def get_cars():
-    print("GET CAR")
     if request.method == 'GET':
-        cars = db.session.query(Cars).all()
+        cars = db.session.query(Cars).order_by(Cars.id.desc()).limit(3).all()
         data = []
-        print("GET CAR INFORMATION")
-        print(cars)
 
         if cars == []:
             return jsonify({"message": "No cars available", 'errors':[]})

@@ -20,13 +20,18 @@ const Explore={
           </div>
       </form>
     </div>
-    <div class="card-deck">
-      <div v-for="car in cars" class="card" style="width: 18rem;">
-        <img :src='car.photo' class="card-img-top" alt="">
-        <div class="card-body">
-          <h5 class="card-title">{{car.year}} {{car.make}}</h5>
-          <p class="card-text">{{car.model}}</p>
-          <a @click='getCar(car.id)' class="btn btn-primary" >View more details</a>
+    <div>
+      <div class="card-deck">
+        <div v-for="car in cars" class="card" style="width: 18rem;">
+          <img :src='car.photo' class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+            <i class="fa fa-tag" aria-hidden="true">{{getPrice(car.price)}}</i>
+            <p class="card-text">{{car.model}}</p>
+            <div class="card-footer">
+              <a @click='getCar(car.id)' class="btn btn-primary btn-block" >View more details</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>`,
@@ -34,7 +39,7 @@ const Explore={
         return{
         car_make:'',
         car_model:'',
-        cars: []
+        cars: [],
         }
       },
       created(){
@@ -57,7 +62,6 @@ const Explore={
       methods:{
         search(){
             let self=this;
-
             fetch("/api/search",{
               method: 'GET',
               headers:{
@@ -79,6 +83,9 @@ const Explore={
         },
         getCar(id){
           router.push({path: '/cars/'+ id});
+        },
+        getPrice(price){
+          return "$"+price.toLocaleString('en');
         }
       }
 }
@@ -383,7 +390,7 @@ const NewCar = {
             self.message=jsonResp.message;
             self.error=jsonResp.error;
             if(self.message){
-              router.push({path:'/explore',params:{response:self.message}})
+              router.push({path:'/explore'})
             }else{
               console.log(self.error)
             }
@@ -403,12 +410,12 @@ const NewCar = {
 const Cars = {
   name: 'Cars',
   template:`
-    <div id="viewCar">
-      <div class= "card">
-        <div>
-          <img :src='car.photo'/>
+    <div id="viewCar" class="card mb-3" style="max-width: 540px;">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img :src='car.photo' class="card-img"/>
         </div>
-        <div>
+        <div class="col-md-8">
           <div class="card-body">
             <h2 class="card-title" >{{car.year}} {{ car.make }}</h2>
             <p class="card-model">{{ car.model }}</p>
@@ -418,7 +425,7 @@ const Cars = {
             <p class="card-type">{{ car.car_type }}</p>
             <p class="card-trans">{{ car.transmission }}</p>
             <button class="btn btn-success" type="button">Email Owner</button>
-            <i id="heart" class="fa fa-heart-o" v-on:click="favcar"></i>
+            <i id="heart" class="fa fa-heart-o" aria-hidden="ture" v-on:click="favcar"></i>
           </div>
         </div>
       </div>
