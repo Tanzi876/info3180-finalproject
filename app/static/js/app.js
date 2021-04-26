@@ -3,20 +3,20 @@
 const Explore={
     name:'explore',
     template:`
-    <div class ="row card">
+    <div class="card ">
       <form class="card-body" id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
-          <div class="input-group">
-          <div class="form-group">
-              <label for="car_make">Make</label>
-              <input type="text" class="form-control" id="car_make" name="car_make">
-          </div>
-           <div class="form-group">
-               <label for="car_model">Model</label>
-               <input type="text" class="form-control" id="car_model" name="car_model">
-           </div>
-          </div>
-          <div>
-            <button type="submit" class="btn btn-success">Search</button>
+          <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="car_make">Make</label>
+                  <input type="text" class="form-control" id="car_make" name="car_make">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="car_model">Model</label>
+                  <input type="text" class="form-control" id="car_model" name="car_model">
+                </div>
+                <div class="form-group col-md-4">
+                  <button name='submit' type="submit" class="btn btn-success form-control">Search</button>
+                </div>
           </div>
       </form>
     </div>
@@ -129,10 +129,10 @@ const Logout = {
 const Login = {
   name:'login',
   template :`
-    <div class= 'container centered'>
+    <div class= 'centered'>
       <h1 class="page-header">Login to your account</h1>
+      <div class="card shadow p-3 mb-5 bg-white rounded " style="width: 18rem;">
       <form id="login-form" @submit.prevent="login">
-        <div class="card" style="width: 18rem;">
           <div class="card-body login">
             <div style="margin-top:5%;">
               <label for='username'><strong>Username</strong></label><br>
@@ -143,7 +143,7 @@ const Login = {
               <input type='password' id='password' name='password' style="width: 100%;"/>
             </div>
             <div style="margin-top:5%;">
-              <button id="submit" class="btn btn-success">Login</button> 
+              <button id="submit" class="btn btn-success btn-block">Login</button> 
             </div>
             <div v-if='messageFlag' style="margin-top:5%;">
               <div class="alert alert-danger center" style="width: 100%; margin-top: 5%;">
@@ -151,8 +151,8 @@ const Login = {
               </div>
             </div>
           </div>
-        </div>
       </form>
+      </div>
     </div>`,
     props:['response'],
   methods:{
@@ -307,26 +307,26 @@ const NewCar = {
         
         <div>
             <form id="AddCar" @submit.prevent= 'car' enctype='multipart/form-data' novalidate>
-                <div class="input-group">
-                  <div class="form-group">
-                    <label for="make">Make</label>
-                    <input type="text" class="form-control" id="make" name="make">
-                  </div>
-                  <div class="form-group">
-                      <label for="model">Model</label>
-                      <input type="text" class="form-control" id="model" name="model">
-                  </div>
+              <div class="row">
+                <div class="col">
+                  <label for="make">Make</label>
+                  <input type="text" class="form-control" id="make" name="make">
                 </div>
-              <div class = "input-group">
-                  <div class="form-group">
-                    <label for="colour">Colour</label>
-                    <input type="text" class="form-control" id="colour" name="colour">
-                  </div>
-                  <div class="form-group">
-                      <label for="year">Year</label>
-                      <input type="text" class="form-control" id="year" name="year">
-                  </div>
+                <div class="col">
+                    <label for="model">Model</label>
+                    <input type="text" class="form-control" id="model" name="model">
                 </div>
+              </div>
+              <div class = "row">
+                <div class="col">
+                  <label for="colour">Colour</label>
+                  <input type="text" class="form-control" id="colour" name="colour">
+                </div>
+                <div class="col">
+                    <label for="year">Year</label>
+                    <input type="text" class="form-control" id="year" name="year">
+                </div>
+              </div>
 
                 <div class="form-group">
                     <label for="transmission">Transmission</label>
@@ -483,20 +483,39 @@ const Users = {
   name: 'Users',
   template:`
     <div>
-      <div class="card mb-3" style="max-width: 540px;">
+      <div class="card profile">
         <div class="row no-gutters">
           <div class="col-md-4">
-            <img :src='user.photo' class="card-img" alt="...">
+            <img :src='user.photo' class="card-img rounded-circle" alt="...">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">{{user.name}}</h5>
-              <p class="card-text">{{user.biography}}</p>
-              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+              <div class="card-title">
+                <h2 class="font-weight-bold">{{user.name}}</h2>
+                <h5 class="card-text text-muted font-weight-bold">{{userName(user.username)}}</h5>
+              <div>
+              <div>
+                <p class="card-text text-muted">{{user.biography}}</p>
+              <div>
+              <div class="row">
+                <p class="col-sm-3 text-muted font-weight-bold">Email</p>
+                <p class="col-sm-9">{{user.email}}</p>
+
+                <p class="col-sm-3 text-muted font-weight-bold">Location</p>
+                <p class="col-sm-9">{{user.location}}</p>
+
+                <p class="col-sm-3 text-muted font-weight-bold">Joined</p>
+                <p class="col-sm-9">{{date(user.date_joined)}}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div>
+        <h2>Cars Favourited</h2>
+      </div
+
       <div class="card-deck">
         <div v-for="car in cars" class="card" style="width: 18rem;">
           <img :src='car.photo' class="card-img-top" alt="">
@@ -507,6 +526,7 @@ const Users = {
           </div>
         </div>
       </div>
+
     </div>`,
       fav(){
         let self=this;
@@ -524,6 +544,15 @@ const Users = {
         .catch(function(error){
           console.log(error);
         })
+      },
+      methods:{
+        userName(username){
+          return "@"+username;
+        },
+        date(date){
+          return new Intl.DateTimeFormat('en-US').format(date);
+        }
+
       },
     created(){
         let self=this;
@@ -554,7 +583,6 @@ const Users = {
         .catch(function(error){
           console.log(error);
         })
-      //fav(); 
     },
     data(){
       return {
@@ -665,7 +693,7 @@ app.component('app-header', {
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto" v-if='checkLogin() == true'>
+              <ul class="navbar-nav mr-auto" v-show='checkLogin() == true'>
                 <li class="nav-item active">
                   <router-link to="/cars/new" class="nav-link">Add Car</router-link>
                 </li>
@@ -676,12 +704,12 @@ app.component('app-header', {
                   <router-link v-bind:to='userPath' class="nav-link">My Profile</router-link>
                 </li>
               </ul>
-              <ul class="navbar-nav mr-auto" v-if='checkLogin() == true'>
+              <ul class="navbar-nav mr-auto" v-show='checkLogin() == true'>
                   <li class="nav-item active">
                     <router-link to="/logout" class="nav-link">Logout</router-link>
                   </li>
               </ul>
-              <ul class="navbar-nav mr-auto" v-if='checkLogin() == false'>
+              <ul class="navbar-nav mr-auto" v-show='checkLogin() == false'>
                   <li class="nav-item active">
                     <router-link to="/register" class="nav-link">Register</router-link>
                   </li>

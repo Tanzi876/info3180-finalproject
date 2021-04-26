@@ -2,6 +2,18 @@ body {
     padding-top: 5rem;
 }
 
+.profile{
+    max-width: 900px;
+    padding: 1em;
+}
+
+.profile img{
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    object-fit:cover;
+}
+
 .home {
     height: 600px;
     display: grid;
