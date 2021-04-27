@@ -22,7 +22,7 @@ const Explore={
     </div>
     <div>
      <div class="card-deck">
-        <div v-for="car in filteredpost :key="car.id" " class="card" style="width: 18rem;">
+        <div v-for="car in filteredpost" class="card" style="width: 18rem;">
           <img :src='car.photo' class="card-img-top" alt="">
           <div class="card-body">
             <h5 class="card-title">{{car.year}} {{car.make}}</h5>
