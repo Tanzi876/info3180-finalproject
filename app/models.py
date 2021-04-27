@@ -53,8 +53,8 @@ class Favourites(db.Model):
     __tablename__ = 'favourites'
 
     id = db.Column(db.Integer, primary_key=True)
-    car_id= db.Column(db.Integer, primary_key=True)
-    user_id=db.Column(db.Integer, primary_key=True)
+    car_id= db.Column(db.Integer)
+    user_id=db.Column(db.Integer)
 
     def __init__(self,car_id,user_id):
         self.car_id=car_id

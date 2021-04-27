@@ -62,17 +62,18 @@ const Explore={
       methods:{
         search(){
             let self=this;
-            fetch("/api/search",{
+            fetch("/api/search/",{
               method: 'GET',
               headers:{
+                'X-CSRFToken': token,
                 'Authorization':'Bearer ' +localStorage.getItem('token')
               },
               credentials:'same-origin'
-            
             })
             .then(resp => resp.json())
             .then(function(jsonResp) {
               self.message = jsonResp.message;
+              console.log(self.message);
               self.error = jsonResp.error;
               self.cars = jsonResp.data;
             })
@@ -270,7 +271,7 @@ template:`
       self.message=jsonResp.message;
       self.error=jsonResp.error;
       if(self.message){
-        router.push({path: '/explore'})
+        router.push({path:'/login'})
       }else{
         console.log(self.error)
       }
@@ -425,7 +426,7 @@ const Cars = {
             <p class="card-type">{{ car.car_type }}</p>
             <p class="card-trans">{{ car.transmission }}</p>
             <button class="btn btn-success" type="button">Email Owner</button>
-            <i id="heart" class="fa fa-heart-o" aria-hidden="ture" v-on:click="favcar"></i>
+            <i class="fa fa-heart" aria-hidden="true" v-on:click="favcar"></i>
           </div>
         </div>
       </div>
@@ -455,16 +456,19 @@ const Cars = {
         fetch('/api/cars/'+this.$route.params.car_id+'/favourite', {
             method: 'POST',
             headers: {
-                'Authorization':'Bearer' +localStorage.getItem('token')
+              'X-CSRFToken':token,
+              'Authorization':'Bearer ' +localStorage.getItem('token')
             },
             credentials:'same-origin' 
         })
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(data) {
-            console.log(data.result)
-            self.result=data.result;
+        .then(resp => resp.json()).then(function(jsonResp){
+          self.message=jsonResp.message;
+          self.error=jsonResp.error;
+          if(self.message){
+            console.log(self.message)
+          }else{
+            console.log(self.error)
+          }
         })
         .catch(function(error) {
             console.log(error)
@@ -482,77 +486,74 @@ const Cars = {
 const Users = {
   name: 'Users',
   template:`
-    <div>
-      <div class="card profile">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <img :src='user.photo' class="card-img rounded-circle" alt="...">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <div class="card-title">
-                <h2 class="font-weight-bold">{{user.name}}</h2>
-                <h5 class="card-text text-muted font-weight-bold">{{userName(user.username)}}</h5>
-              <div>
-              <div>
-                <p class="card-text text-muted">{{user.biography}}</p>
-              <div>
-              <div class="row">
-                <p class="col-sm-3 text-muted font-weight-bold">Email</p>
-                <p class="col-sm-9">{{user.email}}</p>
-
-                <p class="col-sm-3 text-muted font-weight-bold">Location</p>
-                <p class="col-sm-9">{{user.location}}</p>
-
-                <p class="col-sm-3 text-muted font-weight-bold">Joined</p>
-                <p class="col-sm-9">{{date(user.date_joined)}}</p>
-              </div>
+  <div>
+    <div class= "card profile">
+      <div class="row no-gutters">
+            <div class="col-md-4">
+                <img :src='user.photo' class="card-img rounded-circle" alt="...">
             </div>
-          </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h2 class="font-weight-bold">{{user.name}}</h2>
+                        <h5 class="card-text text-muted font-weight-bold">{{userName(user.username)}}</h5>
+                    </div>
+
+                    <div>
+                        <p class="card-text text-muted">{{user.biography}}</p>
+                    </div>
+
+                    <div class="row">
+                        <p class="col-sm-3 text-muted font-weight-bold">Email</p>
+                        <p class="col-sm-9">{{user.email}}</p>
+
+                        <p class="col-sm-3 text-muted font-weight-bold">Location</p>
+                        <p class="col-sm-9">{{user.location}}</p>
+
+                        <p class="col-sm-3 text-muted font-weight-bold">Joined</p>
+                        <p class="col-sm-9">{{user.date_joined}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
 
-      <div>
-        <h2>Cars Favourited</h2>
-      </div
+    <div>
+      <h2>Cars Favourited</h2>
+    </div>
 
-      <div class="card-deck">
+    <div class="card-deck">
         <div v-for="car in cars" class="card" style="width: 18rem;">
-          <img :src='car.photo' class="card-img-top" alt="">
-          <div class="card-body">
-            <h5 class="card-title">{{car.year}} {{car.make}}</h5>
-            <p class="card-text">{{car.model}}</p>
-            <a href='/api/cars/{{car.id}}' class="btn btn-primary">View more details</a>
-          </div>
+            <img :src='car.photo' class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+                <p class="card-text">{{car.model}}</p>
+                <a href='/api/cars/{{car.id}}' class="btn btn-primary">View more details</a>
+            </div>
         </div>
-      </div>
-
-    </div>`,
-      fav(){
-        let self=this;
-        fetch('/api/users/'+this.$route.params.user_id+'favourites',{
-          method:'GET',
-          headers:{
-            'Authorization':'Bearer ' + localStorage.getItem('token')
-          },
-          credentials: 'same-origin'
-        })
-        .then(resp => resp.json())
-        .then(function(jsonResp) {
-          self.cars = jsonResp.data;
-        })
-        .catch(function(error){
-          console.log(error);
-        })
-      },
+    </div>
+  </div>`,
       methods:{
         userName(username){
           return "@"+username;
         },
-        date(date){
-          return new Intl.DateTimeFormat('en-US').format(date);
+        fav(){
+          let self=this;
+          fetch('/api/users/'+this.$route.params.user_id+'/favourites',{
+            method:'GET',
+            headers:{
+              'Authorization':'Bearer ' + localStorage.getItem('token')
+            },
+            credentials: 'same-origin'
+          })
+          .then(resp => resp.json())
+          .then(function(jsonResp) {
+            self.cars = jsonResp.data;
+          })
+          .catch(function(error){
+            console.log(error);
+          })
         }
-
       },
     created(){
         let self=this;
@@ -583,6 +584,8 @@ const Users = {
         .catch(function(error){
           console.log(error);
         })
+
+        self.fav();
     },
     data(){
       return {
