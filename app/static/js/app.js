@@ -20,19 +20,19 @@ const Explore={
           </div>
       </form>
     </div>
-    <div>
-     <div class="card-deck">
-        <div v-for="car in cars" class="card" style="width: 18rem;">
-          <img :src='car.photo' class="card-img-top" alt="">
-          <div class="card-body">
-            <h5 class="card-title">{{car.year}} {{car.make}}</h5>
-            <i class="fa fa-tag" aria-hidden="true">{{getPrice(car.price)}}</i>
-            <p class="card-text">{{car.model}}</p>
-            <div class="card-footer">
-              <a @click='getCar(car.id)' class="btn btn-primary btn-block" >View more details</a>
+    <div class="layout">
+      <div v-for="car in cars" >
+          <div class="card" style="width: 18rem;">
+            <img :src='car.photo' class="card-img-top" alt="">
+            <div class="card-body">
+              <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+              <i class="fa fa-tag" aria-hidden="true">{{getPrice(car.price)}}</i>
+              <p class="card-text">{{car.model}}</p>
+              <div class="card-footer">
+                <a @click='getCar(car.id)' class="btn btn-primary btn-block" >View more details</a>
+              </div>
             </div>
           </div>
-        </div>
       </div>
     </div>`,
       data(){
@@ -424,26 +424,30 @@ const NewCar = {
 const Cars = {
   name: 'Cars',
   template:`
-    <div id="viewCar" class="card mb-3" style="max-width: 540px;">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img :src='car.photo' class="card-img"/>
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h2 class="card-title" >{{car.year}} {{ car.make }}</h2>
-            <p class="card-model">{{ car.model }}</p>
-            <p class="card-des">{{ car.description }}</p>
-            <p class="card-color">{{ car.colour }}</p>
-            <p class="card-price">{{ car.price }}</p>
-            <p class="card-type">{{ car.car_type }}</p>
-            <p class="card-trans">{{ car.transmission }}</p>
-            <button class="btn btn-success" type="button">Email Owner</button>
-            <i class="fa fa-heart" aria-hidden="true" v-on:click="favcar"></i>
-          </div>
+  <div id="viewCar" class="card mb-8" >
+    <div class="row no-gutters viewCar">
+      <div class="col-md-4">
+        <img :src='car.photo' class="card-img"/>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h2 class="card-title" >{{car.year}} {{ car.make }}</h2>
+          <h6 class="card-model">{{ car.model }}</h6>
+          <p class="card-des">{{ car.description }}</p>
+          <div class="info">
+            <div class="one" style="float: left;">
+                <p class="card-color">Color: {{ car.colour }}</p> 
+              </div>
+              <p class="card-price">Body Type: {{ car.car_type }}</p>
+              <div class="two" style="float: left;"><p class="card-type">Price: {{ car.price }}</p></div>
+              <p class="card-trans">Transmission: {{ car.transmission }}</p>
+          </div>  
+          <button class="btn btn-success" type="button">Email Owner</button>
+          <i id="heart" class="fa fa-heart" aria-hidden="ture" v-on:click="favcar"></i>
         </div>
       </div>
-    </div>`,
+    </div>
+  </div>`,
   created() {
     let self = this;
 
@@ -542,7 +546,7 @@ const Users = {
               <div class="card-body">
                   <h5 class="card-title">{{car.year}} {{car.make}}</h5>
                   <p class="card-text">{{car.model}}</p>
-                  <a href='/api/cars/{{car.id}}' class="btn btn-primary btn-block">View more details</a>
+                  <a @click='carID(car.id)' class="btn btn-primary btn-block">View more details</a>
               </div>
           </div>
         </div>
@@ -551,6 +555,9 @@ const Users = {
       methods:{
         userName(username){
           return "@"+username;
+        },
+        carID(id){
+          router.push({path:'/cars/'+id});
         },
         fav(){
           let self=this;
@@ -615,17 +622,19 @@ const Users = {
 const Home ={
   name:'Home',
   template:`
-      <div class="home">
-        <div class="home-txt">
+    <div class="home">
+      <div class="jumbotron">
+        <div class="page-header">
           <h1>{{ heading }}</h1>
-          <p>{{ para }}</p>
-          <button @click= register() type = "button">Register</button>
-          <button @click= login() type = "button">Login</button>
         </div>
-        <div class="home-img">
-          <img src= "/images/homepage.jpeg"/>
-        </div>
-      </div>`,
+        <p>{{ para }}</p>
+        <button @click= register() type = "button" class="btn btn-primary btn-lg">Register</button>
+        <button @click= login() type = "button" class="btn btn-success btn-lg">Login</button>
+      </div>
+      <div class="home-img">
+        <img src= "/images/homepage.jpeg"/>
+      </div>
+    </div>`,
     data() {
       return {
         heading: 'Buy and Sell Cars Online',
