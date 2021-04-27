@@ -93,20 +93,22 @@ def viewcar(car_id):
 @requires_auth
 def favcar(car_id):
     response = ''
-    if request.method == 'POST':
+    if current_user.is_authenticated():
         usid = current_user.get_id()
-        print("USER ID")
-        print(usid)
- 
-        #cid = db.session.query(Favourites).filter_by(car_id=car_id).first()
-        fav = Favourites(car_id,usid)
-        db.session.add(fav)
-        db.session.commit()
-        response = "Car added to favorites"
-        return jsonify(message=response),201
-        #except Exception as e:
-            #response = "Car already a favorite"
-            #return jsonify(error=response),20
+        cid = Favourites.query.filter(car_id=car_id).one()
+        if cid is None:
+            fav = Favourites(cid, usid)
+            db.session.add(fav)
+            db.session.commit()
+
+            response = "Car added to favorites"
+            return jsonify(message=response),200
+        else:
+            response = "Car already a favorite"
+            return jsonify(error=response)
+    
+    else:
+        response = "Must be logged in to perform this action"
     return jsonify(error=response),401
 
 #Save new cars to the Database
@@ -199,41 +201,13 @@ def users(user_id):
         response="Failed"
         return jsonify(error=response),400
 
-@app.route("/api/users/<user_id>/favourites", methods=['GET'])
+@app.route("/api/users/<user_id>/favourites")
 @requires_auth
 def usersFav(user_id):
     cars =[]
     favs = []
-    try:
-        favs = db.session.query(Favourites).filter_by(user_id=user_id).all()
-        print("USER ID")
-        print(user_id)
-        for fav in favs:
-            print("CAR ID")
-            print(fav.car_id)
-            carID = fav.car_id
-            car = db.session.query(Cars).filter_by(id=carID).first()
-            print(car)
-            cars.append({
-                        'id': car.id,
-                        'description': car.description,
-                        'make': car.make,
-                        'model': car.model,
-                        'colour': car.colour,
-                        'year': car.year,
-                        'transmission': car.transmission,
-                        'car_type': car.car_type,
-                        'price': car.price,
-                        'photo': "/uploads/" + car.photo,
-                        'user_id': car.user_id
-                        })
-        return jsonify(data=cars,message="Success"),200
-    except Exception as e:
-        print(e)
-        response="Failed"
-        return jsonify(error=response),400
-    
-
+    #try:
+        #favs = db.session.query(Favourites).filter_by(user_id=user_id)
     
 
 
@@ -276,7 +250,6 @@ def search():
     response = ''
     data = []
     if form.validate_on_submit():
-        print("FORM")
         try:
             if form.search_make.data:
                 make=form.search_make.data
