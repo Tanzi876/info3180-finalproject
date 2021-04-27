@@ -43,19 +43,19 @@ const Explore={
         
         }
       },
-      computed:{
-        filteredpost(){
-          if (car_make != ''){
-            return this.cars.filter(car=>car.make.includes(this.car_make))
+      // computed:{
+      //   filteredpost(){
+      //     if (car_make != ''){
+      //       return this.cars.filter(car=>car.make.includes(this.car_make))
 
-          }else if (car_model != ''){
-            return this.cars.filter(car=>car.model.includes(this.car_model))
-          }else{
-            return this.cars
-          }
+      //     }else if (car_model != ''){
+      //       return this.cars.filter(car=>car.model.includes(this.car_model))
+      //     }else{
+      //       return this.cars
+      //     }
           
-        } 
-      },
+      //   } 
+      // },
       created(){
         let self = this;
         fetch("/api/cars",{
@@ -76,7 +76,7 @@ const Explore={
       methods:{
         search(){
             let self=this;
-            fetch("/api/search/",{
+            fetch("/api/search/?make=" + self.car_make+ '&model='+ self.car_model,{
               method: 'GET',
               headers:{
                 'X-CSRFToken': token,
