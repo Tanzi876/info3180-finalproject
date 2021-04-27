@@ -249,7 +249,7 @@ def search():
     form=SearchForm()
     response = ''
     data = []
-    if form.validate_on_submit():
+    if request.method =="GET":
         try:
             if form.search_make.data:
                 make=form.search_make.data
