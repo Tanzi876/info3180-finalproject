@@ -45,10 +45,10 @@ const Explore={
       },
       computed:{
         filteredpost(){
-          if (car_make != ''){
+          if (this.car_make != ''){
             return this.cars.filter(car=>car.toLowerCase().includes(this.car_make.toLowerCase()))
 
-          }else if (car_model != ''){
+          }else if (this.car_model != ''){
             return this.cars.filter(car=>car.toLowerCase().includes(this.car_model.toLowerCase()))
           }else{
             return this.cars
