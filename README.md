@@ -18,10 +18,7 @@ Donald Berry 620130142
 Shenelle McCarthy 620068748
 
 
-NB: 
-Page has to be reloaded for navigation bar to change
-
-Search Function is not working
+NB: Page has to be reloaded for navigation bar to change, Search Function is not working
 
 
 Tasks Assigned
