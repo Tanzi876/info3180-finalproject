@@ -4,7 +4,7 @@ const Explore={
     name:'explore',
     template:`
     <div class="card ">
-      <form class="card-body" id="search-form" @submit.prevent='search' enctype='multipart/form-data' novalidate>
+      <form class="card-body" id="search-form" @submit.prevent='search()' enctype='multipart/form-data' novalidate>
           <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="car_make">Make</label>
@@ -21,15 +21,17 @@ const Explore={
       </form>
     </div>
     <div>
-      <div class="card-deck">
-        <div v-for="car in cars" class="card" style="width: 18rem;">
-          <img :src='car.photo' class="card-img-top" alt="">
-          <div class="card-body">
-            <h5 class="card-title">{{car.year}} {{car.make}}</h5>
-            <i class="fa fa-tag" aria-hidden="true">{{getPrice(car.price)}}</i>
-            <p class="card-text">{{car.model}}</p>
-            <div class="card-footer">
-              <a @click='getCar(car.id)' class="btn btn-primary btn-block" >View more details</a>
+    <div class="layout">
+      <div v-for="car in cars" >
+          <div class="card" style="width: 18rem;">
+            <img :src='car.photo' class="card-img-top" alt="">
+            <div class="card-body">
+              <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+              <i class="fa fa-tag" aria-hidden="true">{{getPrice(car.price)}}</i>
+              <p class="card-text">{{car.model}}</p>
+              <div class="card-footer">
+                <a @click='getCar(car.id)' class="btn btn-primary btn-block" >View more details</a>
+              </div>
             </div>
           </div>
         </div>
@@ -62,7 +64,7 @@ const Explore={
       methods:{
         search(){
             let self=this;
-            fetch("/api/search/",{
+            fetch("/api/search",{
               method: 'GET',
               headers:{
                 'X-CSRFToken': token,
@@ -486,8 +488,8 @@ const Cars = {
 const Users = {
   name: 'Users',
   template:`
-  <div>
-    <div class= "card profile">
+  <div class = "page">
+    <div class= "card profile cardShadow">
       <div class="row no-gutters">
             <div class="col-md-4">
                 <img :src='user.photo' class="card-img rounded-circle" alt="...">
@@ -499,7 +501,7 @@ const Users = {
                         <h5 class="card-text text-muted font-weight-bold">{{userName(user.username)}}</h5>
                     </div>
 
-                    <div>
+                    <div class="profile-desc">
                         <p class="card-text text-muted">{{user.biography}}</p>
                     </div>
 
@@ -522,14 +524,16 @@ const Users = {
       <h2>Cars Favourited</h2>
     </div>
 
-    <div class="card-deck">
-        <div v-for="car in cars" class="card" style="width: 18rem;">
-            <img :src='car.photo' class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title">{{car.year}} {{car.make}}</h5>
-                <p class="card-text">{{car.model}}</p>
-                <a href='/api/cars/{{car.id}}' class="btn btn-primary">View more details</a>
-            </div>
+    <div class="layout">
+        <div v-for="car in cars" >
+          <div class="card" style="width: 18rem;">
+              <img :src='car.photo' class="card-img-top" alt="">
+              <div class="card-body">
+                  <h5 class="card-title">{{car.year}} {{car.make}}</h5>
+                  <p class="card-text">{{car.model}}</p>
+                  <a href='/api/cars/{{car.id}}' class="btn btn-primary btn-block">View more details</a>
+              </div>
+          </div>
         </div>
     </div>
   </div>`,

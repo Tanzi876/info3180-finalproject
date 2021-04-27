@@ -3,7 +3,14 @@ body {
 }
 
 .profile{
-    max-width: 900px;
+    padding: 1em;
+}
+
+.profile-desc{
+    padding: 1em;
+}
+
+.page{
     padding: 1em;
 }
 
@@ -30,4 +37,22 @@ body {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
     border-radius: 0.3rem;
+}
+
+.layout{
+    display: grid;
+    grid-template-columns: repeat(3,3fr);
+    column-gap: 20px;
+    row-gap: 20px;
+    padding-top: 1em;
+}
+
+.layout img{
+    height: 250px;
+    overflow: hidden;
+    object-fit:cover;
+}
+
+.cardShadow{
+    box-shadow: 5px 8px 6px -1px rgba(0,0,0,0.35)
 }
