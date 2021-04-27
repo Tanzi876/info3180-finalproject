@@ -275,8 +275,12 @@ def search():
     form=SearchForm()
     response = ''
     data = []
+<<<<<<< HEAD
     if form.validate_on_submit():
         print("FORM")
+=======
+    if request.method =="GET":
+>>>>>>> acb36efd84c48f479a055cb85b0188959a7afd4c
         try:
             if form.search_make.data:
                 make=form.search_make.data
