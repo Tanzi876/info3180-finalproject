@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+
+<div id="viewCar" class="card mb-8" style="max-width: 700px;">
+    <div class="row no-gutters">
+      <div class="col-md-4">
+        <img src="{{ url_for('static', filename='car.jpg') }}" class="card-img"/>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h2 class="card-title" >2018 Tesla</h2>
+          <h6 class="card-model">Model S</h4>
+          <p class="card-des">Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+              Saepe repellendus beatae ut omnis, vero distinctio quia porro illum odit 
+            consectetur amet sapiente quisquam modi aut deleniti, quaerat voluptas. Incidunt, sint.</p>
+          <div class="info">
+            <div class="one" style="float: left;">
+                <p class="card-color">Color: color</p> 
+              </div>
+              <p class="card-price">Body Type: type</p>
+              <div class="two" style="float: left;"><p class="card-type">Price: price</p></div>
+              <p class="card-trans">Transmission: tran</p>
+          </div>  
+          <button class="btn btn-success" type="button">Email Owner</button>
+          <i id="heart" class="fa fa-heart" aria-hidden="ture" v-on:click="favcar"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+<!-- 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+<div class="info">
+    <img src="{{ url_for('static', filename='profilepic.jpg') }}" class="img1"/>
+    <h1>Ashley-Ann Ellison</h1>
+    <h5>@ashA</h5>
+    <h5>Jamaica</h5>
+    <h5>{{ date }}</h5> 
+</div>
+<div class="follow">
+    <p class="para">I am a smart and talented young woman who loves website design and development. 
+        Contact me if you'd like to work together on a new project.</p>
+    <div class="post">
+        <div class="p1">
+            <h3>7</h3>
+            <p>Posts</p>
+        </div>
+        <div class="p1">
+            <h3>100</h3>
+            <p>Following</p>
+        </div>
+        <div class="p1">
+            <h3>250</h3>
+            <p>Followers</p>
+        </div>
+    </div>
+    <button>Follow</button>
+</div>
+ -->

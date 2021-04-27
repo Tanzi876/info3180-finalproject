@@ -1,0 +1,95 @@
+.info {
+    padding-bottom: 120px;
+}
+
+.one {
+    padding-right: 140px;
+}
+
+.two {
+    padding-right: 145px;
+}
+
+h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+h6 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: grey;
+    padding-bottom: 20px;
+}
+
+p {
+    color: grey;
+}
+
+.card-img {
+    max-width: 500%;
+    height: 100%;
+}
+
+button {
+    width: 35%;
+}
+
+/* .card-body {
+    float: right;
+} */
+
+/* .img1 {
+    /*display: flex;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    max-width: 15%;
+    padding-top: 20px;
+} */
+
+/* h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+
+h5 {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+} */
+
+/* .p1 {
+    display: inline-block;
+    padding-inline: 50px;
+    text-align: center;
+}
+
+.post {
+    padding-left: 30%;
+}
+
+p {
+    color:rgb(161, 161, 156);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.para {
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-top: 20px;
+    text-align: justify;
+}
+
+button {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: larger;
+    background-color: rgb(112, 175, 18);
+    color: antiquewhite;
+    margin-top: 40px;
+    margin-left: 45%;
+    width: 15%;
+    padding: 10px;
+    border-style: none;
+    border-radius: 5px;
+} */
