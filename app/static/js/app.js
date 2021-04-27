@@ -8,11 +8,11 @@ const Explore={
           <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="car_make">Make</label>
-                  <input type="text" class="form-control" id="car_make" v-model="car_make">
+                  <input type="text" class="form-control" id="car_make" v-model="car_make" name="car_make">
                 </div>
                 <div class="form-group col-md-4">
                   <label for="car_model">Model</label>
-                  <input type="text" class="form-control" id="car_model" v-model="car_model">
+                  <input type="text" class="form-control" id="car_model" v-model="car_model" name="car_model">
                 </div>
                 <div class="form-group col-md-4">
                   <button name='submit' type="submit" class="btn btn-success form-control">Search</button>
