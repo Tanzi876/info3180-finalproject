@@ -337,11 +337,10 @@ def login():
         
         #Query the database for records matching the given username and password
         user = db.session.query(Users).filter_by(username=username).first()
-        
-        if (check_password_hash(user.password, password)):
-            
+        if (user == None):
+            response={ "error_message" : "Invalid username. Please try again." }
+        elif (check_password_hash(user.password, password)):
             login_user(user)
-
             #creates bearer token 
             jwt_token = jwt.encode({'id':user.id, 'user': user.username}, app.config['SECRET_KEY'], algorithm = 'HS256').decode('utf-8')
 
