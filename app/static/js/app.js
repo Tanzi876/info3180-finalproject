@@ -132,7 +132,7 @@ const Login = {
   template :`
     <div class= 'centered'>
       <h1 class="page-header">Login to your account</h1>
-      <div class="card shadow p-3 mb-5 bg-white rounded " style="width: 18rem;">
+      <div class="card shadow p-3 mb-5 bg-white rounded" style="width: 18rem;">
       <form id="login-form" @submit.prevent="login">
           <div class="card-body login">
             <div style="margin-top:5%;">
@@ -601,11 +601,13 @@ const Home ={
   name:'Home',
   template:`
       <div class="home">
-        <div class="home-txt">
-          <h1>{{ heading }}</h1>
+        <div class="jumbotron">
+          <div class="page-header">
+            <h1>{{ heading }}</h1>
+          </div>
           <p>{{ para }}</p>
-          <button @click= register() type = "button">Register</button>
-          <button @click= login() type = "button">Login</button>
+          <button @click= register() type = "button" class="btn btn-primary btn-lg">Register</button>
+          <button @click= login() type = "button" class="btn btn-success btn-lg">Login</button>
         </div>
         <div class="home-img">
           <img src= "/images/homepage.jpeg"/>
