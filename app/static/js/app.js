@@ -8,11 +8,11 @@ const Explore={
           <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="car_make">Make</label>
-                  <input type="text" class="form-control" id="car_make" v-model="car_make">
+                  <input type="text" class="form-control" id="car_make" v-model="car_make" name="car_make">
                 </div>
                 <div class="form-group col-md-4">
                   <label for="car_model">Model</label>
-                  <input type="text" class="form-control" id="car_model" v-model="car_model">
+                  <input type="text" class="form-control" id="car_model" v-model="car_model" name="car_model">
                 </div>
                 <div class="form-group col-md-4">
                   <button name='submit' type="submit" class="btn btn-success form-control">Search</button>
@@ -22,7 +22,7 @@ const Explore={
     </div>
     <div>
      <div class="card-deck">
-        <div v-for="car in filteredpost" class="card" style="width: 18rem;">
+        <div v-for="car in cars" class="card" style="width: 18rem;">
           <img :src='car.photo' class="card-img-top" alt="">
           <div class="card-body">
             <h5 class="card-title">{{car.year}} {{car.make}}</h5>
@@ -43,19 +43,19 @@ const Explore={
         
         }
       },
-      computed:{
-        filteredpost(){
-          if (this.car_make != ''){
-            return this.cars.filter(car=>car.toLowerCase().includes(this.car_make.toLowerCase()))
+      // computed:{
+      //   filteredpost(){
+      //     if (car_make != ''){
+      //       return this.cars.filter(car=>car.make.includes(this.car_make))
 
-          }else if (this.car_model != ''){
-            return this.cars.filter(car=>car.toLowerCase().includes(this.car_model.toLowerCase()))
-          }else{
-            return this.cars
-          }
+      //     }else if (car_model != ''){
+      //       return this.cars.filter(car=>car.model.includes(this.car_model))
+      //     }else{
+      //       return this.cars
+      //     }
           
-        }
-      },
+      //   } 
+      // },
       created(){
         let self = this;
         fetch("/api/cars",{
@@ -76,7 +76,7 @@ const Explore={
       methods:{
         search(){
             let self=this;
-            fetch("/api/search",{
+            fetch("/api/search/?make=" + self.car_make+ '&model='+ self.car_model,{
               method: 'GET',
               headers:{
                 'X-CSRFToken': token,
