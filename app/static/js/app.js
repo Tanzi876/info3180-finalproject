@@ -8,11 +8,11 @@ const Explore={
           <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="car_make">Make</label>
-                  <input type="text" class="form-control" id="car_make" name="car_make">
+                  <input type="text" class="form-control" id="car_make" v-model="car_make">
                 </div>
                 <div class="form-group col-md-4">
                   <label for="car_model">Model</label>
-                  <input type="text" class="form-control" id="car_model" name="car_model">
+                  <input type="text" class="form-control" id="car_model" v-model="car_model">
                 </div>
                 <div class="form-group col-md-4">
                   <button name='submit' type="submit" class="btn btn-success form-control">Search</button>
@@ -21,8 +21,8 @@ const Explore={
       </form>
     </div>
     <div>
-      <div class="card-deck">
-        <div v-for="car in cars" class="card" style="width: 18rem;">
+     <div class="card-deck">
+        <div v-for="car in filteredpost : key="car.id" " class="card" style="width: 18rem;">
           <img :src='car.photo' class="card-img-top" alt="">
           <div class="card-body">
             <h5 class="card-title">{{car.year}} {{car.make}}</h5>
@@ -40,6 +40,20 @@ const Explore={
         car_make:'',
         car_model:'',
         cars: [],
+        
+        }
+      },
+      computed:{
+        filteredpost(){
+          if (car_make != ''){
+            return this.cars.filter(car=>car.toLowerCase().includes(this.car_make.toLowerCase()))
+
+          }else if (car_model != ''){
+            return this.cars.filter(car=>car.toLowerCase().includes(this.car_model.toLowerCase()))
+          }else{
+            return this.cars
+          }
+          
         }
       },
       created(){
@@ -70,13 +84,12 @@ const Explore={
               },
               credentials:'same-origin'
             })
-            .then(resp => resp.json())
-            .then(function(jsonResp) {
-              self.message = jsonResp.message;
-              console.log(self.message);
-              self.error = jsonResp.error;
-              self.cars = jsonResp.data;
-            })
+            .then(resp => resp.json()).then(function(jsonResp){
+              self.cars=jsonResp.data;
+              self.error=jsonResp.error;
+              console.log(self.data);
+            
+             })
             .catch(function(error){
               console.log(error);
             })           
